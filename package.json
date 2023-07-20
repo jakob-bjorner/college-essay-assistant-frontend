@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@react-oauth/google": "^0.11.0",
     "@tiptap/extension-bold": "^2.0.4",
     "@tiptap/extension-document": "^2.0.4",
     "@tiptap/extension-hard-break": "^2.0.4",
@@ -23,6 +24,7 @@
     "@types/react": "18.2.15",
     "@types/react-dom": "18.2.7",
     "autoprefixer": "10.4.14",
+    "axios": "^1.4.0",
     "eslint": "8.45.0",
     "eslint-config-next": "13.4.10",
     "next": "13.4.10",

@@ -11,10 +11,10 @@ export default function Home() {
 
   return (
     <main className="flex ml-16 mr-16 mt-4">
-      <div className="bg-white rounded-lg m-2 p-2 w-5/6 text-black focus:outline-none">
+      <div className="bg-white rounded-lg m-2 p-2 w-5/6 text-black focus:outline-none max-h-[95vh] overflow-auto">
         <TipTap editor={editor} />
       </div>
-      <div className="w-1/6 m-2 font-inter text-lg font-bold italic text-gray-500">
+      <div className="w-1/6 m-2 ">
         <Comment>Hi there</Comment>
       </div>
     </main>
