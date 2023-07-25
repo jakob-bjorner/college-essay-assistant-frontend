@@ -14,7 +14,7 @@ export default function Home() {
       <div className="bg-white rounded-lg m-2 p-2 w-5/6 text-black focus:outline-none max-h-[95vh] overflow-auto">
         <TipTap editor={editor} />
       </div>
-      <div className="w-1/6 m-2 ">
+      <div className="w-1/6 m-2">
         <Comment>Hi there</Comment>
       </div>
     </main>
