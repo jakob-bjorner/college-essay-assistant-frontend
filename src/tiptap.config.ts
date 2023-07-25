@@ -6,9 +6,19 @@ import Strike from "@tiptap/extension-strike";
 import Text from "@tiptap/extension-text";
 
 import ParagraphID from "./extensions/ParagraphID";
+import { Comment } from "./extensions/Comment";
 
 const config = {
-  extensions: [Italic, ParagraphID, Document, HardBreak, Bold, Strike, Text],
+  extensions: [
+    Italic,
+    ParagraphID,
+    Document,
+    HardBreak,
+    Bold,
+    Strike,
+    Text,
+    Comment,
+  ],
   editorProps: {
     attributes: {
       class: "focus:outline-none",
