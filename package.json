@@ -11,6 +11,7 @@
   "dependencies": {
     "@react-oauth/google": "^0.11.0",
     "@tiptap/extension-bold": "^2.0.4",
+    "@tiptap/extension-bubble-menu": "^2.0.4",
     "@tiptap/extension-document": "^2.0.4",
     "@tiptap/extension-hard-break": "^2.0.4",
     "@tiptap/extension-heading": "^2.0.4",
@@ -37,6 +38,7 @@
   },
   "devDependencies": {
     "eslint-config-prettier": "^8.8.0",
+    "eslint-plugin-prettier": "^5.0.0",
     "prettier": "^3.0.0"
   }
 }
