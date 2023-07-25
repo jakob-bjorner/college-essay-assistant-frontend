@@ -4,6 +4,7 @@ import HardBreak from "@tiptap/extension-hard-break";
 import Bold from "@tiptap/extension-bold";
 import Strike from "@tiptap/extension-strike";
 import Text from "@tiptap/extension-text";
+import BubbleMenu from "@tiptap/extension-bubble-menu";
 
 import ParagraphID from "./extensions/ParagraphID";
 import { Comment } from "./extensions/Comment";
@@ -18,6 +19,7 @@ const config = {
     Strike,
     Text,
     Comment,
+    BubbleMenu,
   ],
   editorProps: {
     attributes: {
