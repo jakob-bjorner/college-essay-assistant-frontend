@@ -12,8 +12,8 @@ export default function Home(
   { session, ...pageProps }: { session: any },
 ) {
   const editor = useEditor(config);
-  
-  
+
+
   return (
     <div>
       <div className="flex ml-16 mr-16 mt-4">

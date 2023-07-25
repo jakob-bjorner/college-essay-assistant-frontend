@@ -1,20 +1,34 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 
-export default function DemoBackend() {
-  const [message, setMessage] = useState("");
-  const [loading, setLoading] = useState(true);
+const MyComponent = () => {
+  const [data, setData] = useState(null);
 
   useEffect(() => {
-      fetch('/backend/alldata')
-          .then(res => res.json())
-          .then(data => {
-              setMessage("User id from first user: " + data[0].user_id);
-              setLoading(false);
-          })
+    fetchData();
   }, []);
+
+  const fetchData = async () => {
+    try {
+      const response = await axios.get("/api/data");
+      setData(response.data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
   return (
-    <div>{!loading ? message : "Loading.."}</div>
-  )
-}
+    <div>
+      {data && (
+        <div>
+          <h2>Data from Backend:</h2>
+          <pre>{JSON.stringify(data, null, 2)}</pre>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default MyComponent;
