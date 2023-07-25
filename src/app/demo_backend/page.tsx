@@ -18,7 +18,7 @@ const MyComponent = () => {
       console.error("Error fetching data:", error);
     }
   };
-//
+// helo
   return (
     <div>
       {data && (
