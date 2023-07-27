@@ -19,9 +19,13 @@ export default function LogInBtn() {
         )
     }
   return (
-    <>
-      Not signed in <br />
-      <button onClick={() => signIn()}>Sign in</button>
-    </>
+    <div className="grid grid-cols-2 gap-4 content-start ">
+      <div>
+        Not signed in <br />
+      </div>
+      <div>
+        <button onClick={() => signIn()}>Sign in</button>
+      </div>
+    </div>
   )
 }
