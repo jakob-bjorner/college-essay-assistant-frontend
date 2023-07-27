@@ -6,11 +6,13 @@ import TipTap from "../components/TextEditor";
 import Comment from "../components/Comment";
 import LogInBtn from "../components/LogInBtn";
 
+import { Session } from "next-auth";
+
 import config from "../tiptap.config";
 
-export default function Home(
-  { session, ...pageProps }: { session: any },
-) {
+import type { AppProps } from "next/app";
+// session will be passed into the pageProps: https://stackoverflow.com/questions/73668032/nextauth-type-error-property-session-does-not-exist-on-type
+export default function Home() {
   const editor = useEditor(config);
   
   
