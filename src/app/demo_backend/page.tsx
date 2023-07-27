@@ -1,27 +1,34 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 
-export default function DemoBackend() {
-  const [message, setMessage] = useState("");
-  const [loading, setLoading] = useState(true);
+const MyComponent = () => {
   const [data, setData] = useState(null);
-  //a base to work off of to get and post things to the backend
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
-      const headers = {'Access-Control-Allow-Origin': '*'};
-      axios.get('http://127.0.0.1:5000/api/data',{
-      headers: {'Access-Control-Allow-Origin': '*' }
-      }).then(res => {
-              setMessage("User id from first user: " + res.data.message);
-              setLoading(false);
-          })
-        .catch(error => {
-          // Handle any errors that occurred during the API request
-          console.error('Error:', error.message);
-      });
+    fetchData();
   }, []);
-  return (//
-    <div>{!loading ? message : "Loading.."}</div>
-  )
-}
+
+  const fetchData = async () => {
+    try {
+      const response = await axios.get("/api/data");
+      setData(response.data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+// helo
+  return (
+    <div>
+      {data && (
+        <div>
+          <h2>Data from Backend:</h2>
+          <div>{!loading ? (<pre>{JSON.stringify(data, null, 2)}</pre>) : ("Loading..")}</div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default MyComponent;
