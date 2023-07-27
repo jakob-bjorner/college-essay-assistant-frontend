@@ -29,9 +29,7 @@ export default function Home() {
           <Comment>Hi</Comment>
         </div>
       </div>
-      <Link href="/demo_backend">
-        Go to demo backend
-      </Link>
+      <Link href="/demo_backend">Go to demo backend</Link>
     </main>
   );
 }

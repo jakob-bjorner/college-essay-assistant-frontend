@@ -19,13 +19,19 @@ const MyComponent = () => {
       console.error("Error fetching data:", error);
     }
   };
-// helo
+  // helo
   return (
     <div>
       {data && (
         <div>
           <h2>Data from Backend:</h2>
-          <div>{!loading ? (<pre>{JSON.stringify(data, null, 2)}</pre>) : ("Loading..")}</div>
+          <div>
+            {!loading ? (
+              <pre>{JSON.stringify(data, null, 2)}</pre>
+            ) : (
+              "Loading.."
+            )}
+          </div>
         </div>
       )}
     </div>
