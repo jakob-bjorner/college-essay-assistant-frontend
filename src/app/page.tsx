@@ -1,5 +1,6 @@
 "use client";
 import { useEditor } from "@tiptap/react";
+import Link from "next/link";
 
 import TipTap from "../components/TextEditor";
 import Comment from "../components/Comment";
@@ -28,6 +29,9 @@ export default function Home() {
           <Comment>Hi</Comment>
         </div>
       </div>
+      <Link href="/demo_backend">
+        Go to demo backend
+      </Link>
     </main>
   );
 }

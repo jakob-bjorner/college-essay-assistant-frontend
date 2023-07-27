@@ -12,8 +12,9 @@ const MyComponent = () => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get("/api/data");
+      const response = await axios.get("/backend/alldata");
       setData(response.data);
+      setLoading(false);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
