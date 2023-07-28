@@ -9,6 +9,8 @@ import BubbleMenu from "@tiptap/extension-bubble-menu";
 import ParagraphID from "./extensions/ParagraphID";
 import { Comment } from "./extensions/Comment";
 
+import json from "./examplecontent";
+
 const config = {
   extensions: [
     Italic,
@@ -26,7 +28,7 @@ const config = {
       class: "focus:outline-none",
     },
   },
-  content: "Hello",
+  content: json,
 };
 
 export default config;
