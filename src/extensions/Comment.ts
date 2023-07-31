@@ -45,6 +45,7 @@ export const Comment = Mark.create<CommentOptions>({
         parseHTML: (el) => (el as HTMLSpanElement).getAttribute("data-comment"),
         renderHTML: (attrs) => ({
           "data-comment": attrs.comment,
+          style: "background-color: #ff0",
         }),
       },
     };
