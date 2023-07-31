@@ -12,7 +12,7 @@ const MyComponent = () => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get("/backend/alldata");
+      const response = await axios.get("/backend/data");
       setData(response.data);
       setLoading(false);
     } catch (error) {
@@ -25,13 +25,7 @@ const MyComponent = () => {
       {data && (
         <div>
           <h2>Data from Backend:</h2>
-          <div>
-            {!loading ? (
-              <pre>{JSON.stringify(data, null, 2)}</pre>
-            ) : (
-              "Loading.."
-            )}
-          </div>
+          <div>{!loading ? data : "Loading.."}</div>
         </div>
       )}
     </div>

@@ -50,7 +50,7 @@ export default function Home() {
           ))}
         </div>
       </div>
-      <Link href="/demo_backend">Go to demo backend</Link>
+      {/* <Link href="/demo_backend">Go to demo backend</Link> */}
     </main>
   );
 }
