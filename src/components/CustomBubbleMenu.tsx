@@ -60,7 +60,7 @@ export default function CustomBubbleMenu(props: { editor: Editor | null }) {
       document,
       null,
       XPathResult.FIRST_ORDERED_NODE_TYPE,
-      null
+      null,
     ).singleNodeValue;
     // replace the filler text with the actual comment
     if (commentElement) {
