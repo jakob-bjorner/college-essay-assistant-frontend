@@ -85,7 +85,7 @@ const handler = NextAuth({
                 cert: sslCert, // Set the SSL certificate
                 key: sslKey, // Set the SSL key
               }),
-            },
+            },//
           );
 
           console.log("Decoded JWT token:", response.data);
