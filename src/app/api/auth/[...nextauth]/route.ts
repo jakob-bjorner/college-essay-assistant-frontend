@@ -83,7 +83,7 @@ const handler = NextAuth({
     },
   },
 });
-
+//say hey
 // Export the handler for the GET method
 export const GET = (req, res) => handler(req, res);
 
