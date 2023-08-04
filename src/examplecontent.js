@@ -14,7 +14,7 @@ const json = {
             {
               type: "comment",
               attrs: {
-                comment: "hi",
+                comment: "gghhhh",
               },
             },
           ],

@@ -38,6 +38,12 @@ export const Comment = Mark.create<CommentOptions>({
     };
   },
 
+  addStorage() {
+    return {
+      count: 0,
+    };
+  },
+
   addAttributes() {
     return {
       comment: {
@@ -46,6 +52,7 @@ export const Comment = Mark.create<CommentOptions>({
         renderHTML: (attrs) => ({
           "data-comment": attrs.comment,
           style: "background-color: #ff0",
+          id: `comment-${this.storage.count++}`,
         }),
       },
     };

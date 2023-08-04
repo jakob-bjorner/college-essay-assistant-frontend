@@ -70,7 +70,7 @@ export default function CustomBubbleMenu(props: { editor: Editor | null }) {
     }
   };
 
-  const btnStyle = "border border-black rounded p-2";
+  const btnStyle = "border border-white rounded p-2 text-white bg-black";
 
   return (
     <>
@@ -84,7 +84,7 @@ export default function CustomBubbleMenu(props: { editor: Editor | null }) {
           </button>
           <button onClick={setComment} className={btnStyle}>
             {/* add highlight styling to the comment button text */}
-            <span className="bg-yellow-200">Get Comment</span>
+            <span className="">Get Comment</span>
           </button>
         </BubbleMenu>
       ) : undefined}

@@ -5,8 +5,8 @@ import Bold from "@tiptap/extension-bold";
 import Strike from "@tiptap/extension-strike";
 import Text from "@tiptap/extension-text";
 import BubbleMenu from "@tiptap/extension-bubble-menu";
+import Paragraph from "@tiptap/extension-paragraph";
 
-import ParagraphID from "./extensions/ParagraphID";
 import { Comment } from "./extensions/Comment";
 
 import json from "./examplecontent";
@@ -14,7 +14,6 @@ import json from "./examplecontent";
 const config = {
   extensions: [
     Italic,
-    ParagraphID,
     Document,
     HardBreak,
     Bold,
@@ -22,6 +21,7 @@ const config = {
     Text,
     Comment,
     BubbleMenu,
+    Paragraph,
   ],
   editorProps: {
     attributes: {
