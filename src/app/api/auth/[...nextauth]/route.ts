@@ -13,30 +13,6 @@ const algorithmm = "HS256";
 const sslCert = fs.readFileSync(sslCertFileName);
 const sslKey = fs.readFileSync(sslKeyFileName);
 
-const expectedCLD = `-----BEGIN CERTIFICATE-----
-MIID5TCCAs2gAwIBAgIUNGP39aEwuN5w3HTdOzu05drJ9qEwDQYJKoZIhvcNAQEL
-BQAwgYExCzAJBgNVBAYTAlVTMQswCQYDVQQIDAJXQTESMBAGA1UEBwwJc2FtbWFt
-aXNoMQ0wCwYDVQQKDARtaXR1MQ0wCwYDVQQLDARtaXR1MQ0wCwYDVQQDDARtaXR1
-MSQwIgYJKoZIhvcNAQkBFhVrb3Ntb3NrZWVic0BnbWFpbC5jb20wHhcNMjMwODAz
-MDExODIxWhcNMjQwODAyMDExODIxWjCBgTELMAkGA1UEBhMCVVMxCzAJBgNVBAgM
-AldBMRIwEAYDVQQHDAlzYW1tYW1pc2gxDTALBgNVBAoMBG1pdHUxDTALBgNVBAsM
-BG1pdHUxDTALBgNVBAMMBG1pdHUxJDAiBgkqhkiG9w0BCQEWFWtvc21vc2tlZWJz
-QGdtYWlsLmNvbTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBALsBAGZ8
-p833LoTclNH5YfFdPjz5m83+LcYPFVGpPKvbWVz49UAezu8S0PFlt1CSISFSgddB
-T8BJRHMt/ZACLUZKUMeNCTehi6hseiyJ+J0e5Rwojlq1jEHF7+VEJWMQo/sM55Hw
-gskrDZ1AyOYe/UT9DOJ0a/C52d7PmzkPgbId2jjezih6Xybh3I6LeJMzcjEQnBm+
-aUuQiy5kRWmWCIqxiu7Mcu6zcYJYgCJ3CglaDRtfLpL6br2S0biQxjPFaXUDPezY
-852ng9TocRKz3sFYPofpmW3OVDqk0ZmAijZP/aG9unV27zPB4VBY4QMAxWWpnYOP
-MpC4I5udAuMd+3cCAwEAAaNTMFEwHQYDVR0OBBYAFKtN32EX5wTeBJWbwW3ITU2v
-xeEWMB8GA1UdIwQYMBaAFKtN32EX5wTeBJWbwW3ITU2vxeEWMA8GA1UdEwEB/wQF
-MAMBAf8wDQYJKoZIhvcNAQELBQADggEBADT5+9a8EG277jt4S47bl0gyzqUv2z49
-b61LGsxVKq+Dn2FSYd08GtIW6YJtBzS524NYjVGh5CnXUcJq4mYqOIg5mG0OTRLF
-zzjejKGIAl8/jkRSweYaTPiV5gNL8GbaW34B1zMkfzHkztaI1py80WjMfmUxiuGM
-JJZ6mzOMwgaDUx4tTCGYe5pEMW6iwPTdiL3EH2FwJX1luNLPgtZRstjFblvCfGa5
-ki59NpY1ofKtA5BRC/euqdGgVbkjiQ8+5PNe5xIQbGhWRk0267GuPYtuv3XHSv4K
-/BVOGNdJw7eLxAqtR2PB95XBmtQavVoelIZzXA6tq2YbjMEOyjnEOCY=
------END CERTIFICATE-----`;
-
 const handler = NextAuth({
   providers: [
     GoogleProvider({
@@ -71,7 +47,6 @@ const handler = NextAuth({
         // Sample CLD data
         const cldData = {
           homie: "John the mannnnnn",
-          CLD: expectedCLD, // Send the CLD as a simple string
         };
 
         // Combine JWT token and CLD data in the POST request
@@ -85,7 +60,7 @@ const handler = NextAuth({
                 cert: sslCert, // Set the SSL certificate
                 key: sslKey, // Set the SSL key
               }),
-            },//
+            }
           );
 
           console.log("Decoded JWT token:", response.data);
