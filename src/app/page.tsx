@@ -30,8 +30,9 @@ export default function Home() {
           }
         });
       });
+      console.log(tempComments);
 
-      setComments(tempComments);
+      setComments(Array.from(new Set(tempComments)));
     },
     ...config,
   });
