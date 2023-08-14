@@ -49,7 +49,7 @@ export default function Home() {
 
         <ExtendablePanels
           panel_one={
-            <div className="dark:bg-gray-700 dark:text-gray-400 bg-white text-black rounded-md m-2 p-2  focus:outline-none max-h-[95vh] overflow-auto">
+            <div className="dark:bg-gray-700 dark:text-gray-400 bg-gray-200 text-black p-2 m-2 rounded-md focus:outline-none max-h-[95vh] overflow-auto">
               <CustomBubbleMenu editor={editor} />
               <TipTap editor={editor} />
             </div>
