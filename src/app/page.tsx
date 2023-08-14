@@ -7,7 +7,6 @@ import config from "../tiptap.config";
 import TipTap from "../components/TextEditor";
 import CustomBubbleMenu from "@/components/CustomBubbleMenu";
 import LogInBtn from "../components/LogInBtn";
-import { exportedToken } from "src/app/api/auth/[...nextauth]/route.ts";
 
 export default function Home() {
   const [userProfileData, setUserProfileData] = useState(null);
@@ -33,7 +32,9 @@ export default function Home() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`http://127.0.0.1:5000/user/retrieve/${UserId}`);
+        const response = await axios.get(
+          `http://127.0.0.1:5000/user/retrieve/${UserId}`
+        );
         const userData = response.data; // Assuming the response contains user profile data
         setUserProfileData(userData);
       } catch (error) {
@@ -43,18 +44,20 @@ export default function Home() {
 
     const fetchUserFromToken = async () => {
       try {
-      console.log("Fetch token started")
+        console.log("Fetch token started");
         const response = await axios.post(
-        "http://127.0.0.1:5000/user/retrieve_user",{
-        jwtToken: {
-        tkn: answer
-      }},
-           {
-               headers: {
-    //               "Content-Type": "application/json", // Set the correct Content-Type header
-                  "token":exportedToken
-                }
-            }
+          "http://127.0.0.1:5000/user/retrieve_user",
+          {
+            jwtToken: {
+              tkn: answer,
+            },
+          },
+          {
+            headers: {
+              //               "Content-Type": "application/json", // Set the correct Content-Type header
+              token: exportedToken,
+            },
+          }
         );
 
         // Log the sent JWT token
