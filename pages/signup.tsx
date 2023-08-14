@@ -7,51 +7,43 @@ function Signup() {
   const [name, setName] = useState("");
 
   const handleSignup = async () => {
-  try {
-    const config = {
-      headers: {
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*"
-      }
-    };
+    try {
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+        },
+      };
 
-    const response = await axios.post(
-      "http://127.0.0.1:5000/user/create",
-      {
-        grade: grade,
-        interested_colleges: interestedColleges,
-        name: name,
-        code: "DONK"
-      },
-      config
-    );
+      let USERID;  // Declare the variable outside the block
 
-    if (response.status === 200) {
-      console.log("User created successfully.");
-
-      // Check if response has an "_id" property
-      if (response.data && response.data._id) {
-        const userId = response.data._id;
-        console.log("User ID:", userId);
-
-        // Store user data in local storage
-        localStorage.setItem('userData', JSON.stringify({ userId,grade, interestedColleges, name }));
-
-        // Redirect to the dynamically generated profile route
-        window.open('/');
+      if (typeof window !== "undefined") {
+        USERID = localStorage.getItem("userID");  // Assign a value inside the block
       }
 
-      setGrade("");
-      setInterestedColleges("");
-      setName("");
-    } else {
-      console.error("Error creating user:", response.data.error);
+      const response = await axios.post(
+        "http://127.0.0.1:5000/user/create",
+        {
+          grade: grade,
+          interested_colleges: interestedColleges,
+          name: name,
+          code: "DONK",
+          UserID: USERID,
+        },
+        config
+      );
+
+      if (response.status === 200) {
+        console.log("User created successfully.");
+        setGrade("");
+        setInterestedColleges("");
+        setName("");
+        window.location.href = '/';
+      }
+    } catch (error) {
+      console.error("Error:", error);
     }
-  } catch (error) {
-    console.error("Error:", error);
-  }
-};
-
+  };
 
   return (
     <div className="signup-content">
@@ -78,9 +70,5 @@ function Signup() {
     </div>
   );
 }
+
 export default Signup;
-
-
-
-
-

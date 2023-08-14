@@ -4,7 +4,6 @@ import jwt from "jsonwebtoken";
 import axios from "axios";
 
 const secretKey = "bonk";
-let exportedToken = null;
 const handler = NextAuth({
   providers: [
     GoogleProvider({
@@ -16,9 +15,13 @@ const handler = NextAuth({
     async jwt({ token, account, profile }) {
       if (account) {
         token.accessToken = account.access_token;
-
+        token.id = profile.id
+        token.id_token = account.id_token;
         const claims = {
           email: profile.email,
+          sub: profile.id,
+          name: profile.name,
+          // Include more fields as needed
         };
 
         const options = {
@@ -27,9 +30,9 @@ const handler = NextAuth({
         };
 
         const signedToken = jwt.sign(claims, secretKey, options);
-        exportedToken = signedToken;
 
-        // Modify the token to include the signedToken
+        console.log("Signed Token:", signedToken);
+
         return {
           ...token,
           signedToken,
@@ -42,9 +45,13 @@ const handler = NextAuth({
 
       return token;
     },
+    async session({ session, token }) {
+      // Send properties to the client, like an access_token from a provider.
+      session.id_token = token.id_token;
+      return session;
+    },
   },
 });
 
 export const GET = (req, res) => handler(req, res);
 export const POST = (req, res) => handler(req, res);
-export { exportedToken };
