@@ -28,7 +28,7 @@ export default function Home() {
             tempComments.push(markComments);
           }
         });
-      });
+      });//hi
       setComments(tempComments);
     },
     ...config,

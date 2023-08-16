@@ -51,6 +51,6 @@ const handler = NextAuth({
     },
   },
 });
-
+//ijol
 export const GET = (req, res) => handler(req, res);
 export const POST = (req, res) => handler(req, res);
