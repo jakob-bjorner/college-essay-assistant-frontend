@@ -15,6 +15,7 @@ export default function Home() {
   const [comments, setComments] = useState<string[]>([]);
   const [UserId, setUserId] = useState(null);
   const { data: session, status } = useSession();
+  const secretkey = "dingdong";
 
   const editor = useEditor({
     onUpdate({ editor }) {
@@ -38,8 +39,8 @@ export default function Home() {
       try {
         const decodedToken = jwt.decode(session.id_token);
         if (decodedToken && decodedToken.sub) {
-          setUserId(decodedToken.sub);
-          localStorage.setItem('userID', decodedToken.sub);
+          setUserId(session.id_token);
+          sessionStorage.setItem('userID', session.id_token);
         }
       } catch (error) {
         console.error("Error decoding JWT token:", error);
@@ -53,21 +54,21 @@ export default function Home() {
 
       const fetchData = async () => {
       try {
-        const response = await axios.post("http://127.0.0.1:5000/user/retrieve_user", {
-          jwtToken: decodedToken.sub
-        });
+        const response = await axios.post(
+          "http://127.0.0.1:5000/user/retrieve_user",
+          {
+            jwtToken: UserId,
+            secret: secretkey,
+          },
+        );
 
-        const userIdentifier = response.data._id;
-        userIdentifier.toString();
-        const userDataResponse = await axios.get(`http://127.0.0.1:5000/user/retrieve/${userIdentifier}`);
-        const userData = userDataResponse.data;
-        setUserProfileData(userData);
-
+        setUserProfileData(response.data);
       } catch (error) {
         console.error("Error fetching user profile data:", error);
-        //window.location.href = '/signup';
       }
     };
+
+
 
 
   return (

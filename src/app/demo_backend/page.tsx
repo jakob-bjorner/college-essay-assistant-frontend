@@ -29,7 +29,8 @@ const MyComponent = () => {
         if (decodedToken && decodedToken.sub) {
           setUserId(decodedToken.sub); // Set the user ID from the JWT token
         }
-        const response = axios.post("http://127.0.0.1:5000/user/retrieve_user", {
+        const response = axios.post("http://127.0.0.1:5000/user/retrieve_user",
+        {
           jwtToken: decodedToken.sub
         });
 

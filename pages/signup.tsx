@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
+import DOMPurify from "dompurify";
+
 
 function Signup() {
   const [grade, setGrade] = useState("");
@@ -18,20 +20,24 @@ function Signup() {
       let USERID;  // Declare the variable outside the block
 
       if (typeof window !== "undefined") {
-        USERID = localStorage.getItem("userID");  // Assign a value inside the block
+        USERID = sessionStorage.getItem("userID");  // Assign a value inside the block
       }
 
-      const response = await axios.post(
-        "http://127.0.0.1:5000/user/create",
-        {
-          grade: grade,
-          interested_colleges: interestedColleges,
-          name: name,
-          code: "DONK",
-          UserID: USERID,
-        },
-        config
-      );
+        const sanitizedGrade = DOMPurify.sanitize(grade);
+        const sanitizedInterestedColleges = DOMPurify.sanitize(interestedColleges);
+        const sanitizedName = DOMPurify.sanitize(name);
+
+        const response = await axios.post(
+          "http://127.0.0.1:5000/user/create",
+          {
+            grade: sanitizedGrade,
+            interested_colleges: sanitizedInterestedColleges,
+            name: sanitizedName,
+            code: "DONK",
+            sub: USERID,
+          },
+          config
+        );
 
       if (response.status === 200) {
         console.log("User created successfully.");
