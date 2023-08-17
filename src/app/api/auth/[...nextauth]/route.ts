@@ -15,9 +15,13 @@ const handler = NextAuth({
     async jwt({ token, account, profile }) {
       if (account) {
         token.accessToken = account.access_token;
-
+        token.id = profile.id
+        token.id_token = account.id_token;
         const claims = {
           email: profile.email,
+          sub: profile.id,
+          name: profile.name,
+          // Include more fields as needed
         };
 
         const options = {
@@ -27,7 +31,8 @@ const handler = NextAuth({
 
         const signedToken = jwt.sign(claims, secretKey, options);
 
-        // Modify the token to include the signedToken
+        console.log("Signed Token:", signedToken);
+
         return {
           ...token,
           signedToken,
@@ -41,17 +46,11 @@ const handler = NextAuth({
       return token;
     },
     async session({ session, token }) {
-      session.accessToken = token.accessToken;
-      session.signedToken = token.signedToken;
-      return {
-        session: session,
-        token: token,
-        accessToken: token.accessToken,
-        signedToken: token.signedToken,
-      };
+      session.id_token = token.id_token;
+      return session;
     },
   },
 });
-
+//ijol3e
 export const GET = (req, res) => handler(req, res);
 export const POST = (req, res) => handler(req, res);
