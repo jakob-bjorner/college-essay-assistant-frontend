@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import axios from "axios";
 import DOMPurify from "dompurify";
-
+import { useSession, getSession } from "next-auth/react";
+import jwt from "jsonwebtoken";
 
 function Signup() {
   const [grade, setGrade] = useState("");
@@ -22,7 +23,6 @@ function Signup() {
       if (typeof window !== "undefined") {
         USERID = sessionStorage.getItem("userID");  // Assign a value inside the block
       }
-
         const sanitizedGrade = DOMPurify.sanitize(grade);
         const sanitizedInterestedColleges = DOMPurify.sanitize(interestedColleges);
         const sanitizedName = DOMPurify.sanitize(name);

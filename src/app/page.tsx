@@ -40,7 +40,7 @@ export default function Home() {
         const decodedToken = jwt.decode(session.id_token);
         if (decodedToken && decodedToken.sub) {
           setUserId(session.id_token);
-          sessionStorage.setItem('userID', session.id_token);
+          sessionStorage.setItem('userID', decodedToken.sub);
         }
       } catch (error) {
         console.error("Error decoding JWT token:", error);
