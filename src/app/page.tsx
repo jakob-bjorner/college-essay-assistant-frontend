@@ -1,17 +1,22 @@
 "use client";
-import React, { useState, useEffect } from "react";
-import axios from "axios"; // Import axios
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import Comment from "../components/Comment";
 import { useEditor } from "@tiptap/react";
 import config from "../tiptap.config";
 import TipTap from "../components/TextEditor";
 import CustomBubbleMenu from "@/components/CustomBubbleMenu";
 import LogInBtn from "../components/LogInBtn";
+import { useSession, getSession } from "next-auth/react";
+import jwt from "jsonwebtoken";
 
 export default function Home() {
   const [userProfileData, setUserProfileData] = useState(null);
   const [comments, setComments] = useState<string[]>([]);
   const [UserId, setUserId] = useState(null);
+  const { data: session, status } = useSession();
+  const secretkey = "dingdong";
+
   const editor = useEditor({
     onUpdate({ editor }) {
       const tempComments: string[] = [];
@@ -23,58 +28,48 @@ export default function Home() {
             tempComments.push(markComments);
           }
         });
-      });
+      });//hi
       setComments(tempComments);
     },
     ...config,
   });
 
   useEffect(() => {
-    const fetchData = async () => {
+    if (status === "authenticated" && session?.id_token) {
       try {
-        const response = await axios.get(
-          `http://127.0.0.1:5000/user/retrieve/${UserId}`
-        );
-        const userData = response.data; // Assuming the response contains user profile data
-        setUserProfileData(userData);
+        const decodedToken = jwt.decode(session.id_token);
+        if (decodedToken && decodedToken.sub) {
+          setUserId(session.id_token);
+          sessionStorage.setItem('userID', decodedToken.sub);
+        }
+      } catch (error) {
+        console.error("Error decoding JWT token:", error);
+      }
+    }
+  }, [status, session]);
+
+  useEffect(() => {
+    fetchData();
+  }, [UserId]);
+
+      const fetchData = async () => {
+      try {
+        const response = await axios.post(
+          "http://127.0.0.1:5000/user/retrieve_user",
+          {
+            jwtToken: UserId,
+            secret: secretkey,
+          },
+        );//
+
+        setUserProfileData(response.data);
       } catch (error) {
         console.error("Error fetching user profile data:", error);
       }
     };
 
-    const fetchUserFromToken = async () => {
-      try {
-        console.log("Fetch token started");
-        const response = await axios.post(
-          "http://127.0.0.1:5000/user/retrieve_user",
-          {
-            jwtToken: {
-              tkn: answer,
-            },
-          },
-          {
-            headers: {
-              //               "Content-Type": "application/json", // Set the correct Content-Type header
-              token: exportedToken,
-            },
-          }
-        );
 
-        // Log the sent JWT token
-        console.log("Sent JWT token:", exportedToken);
-        if (response.data.user !== null) {
-          setUserId(JSON.stringify(response.data.user));
-        } else {
-          window.open("/signup", "_blank"); // Open signup page in a new tab
-        }
-      } catch (error) {
-        console.error("Error fetching user data from JWT:", error);
-      }
-    };
 
-    fetchUserFromToken();
-    fetchData();
-  }, [UserId]);
 
   return (
     <main>
