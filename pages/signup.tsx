@@ -74,7 +74,7 @@ function Signup() {
       />
       <button onClick={handleSignup}>Sign Up</button>
     </div>
-  );
+  );//
 }
 
 export default Signup;

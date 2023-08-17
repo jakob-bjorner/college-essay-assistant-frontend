@@ -60,7 +60,7 @@ export default function Home() {
             jwtToken: UserId,
             secret: secretkey,
           },
-        );
+        );//
 
         setUserProfileData(response.data);
       } catch (error) {
