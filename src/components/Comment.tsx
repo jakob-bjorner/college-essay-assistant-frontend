@@ -14,10 +14,6 @@ const Comment = (props: PropsWithChildren) => {
   
   
   return (
-<<<<<<< HEAD
-    <div className="dark:bg-gray-700 dark:text-gray-400 bg-gray-200 text-black p-2 rounded-md w-full">
-      {props.children}
-=======
     <div className="text-gray-200 p-2">
       <div className="dark:bg-gray-700 dark:text-gray-400 bg-white text-black p-2 rounded-md w-full">
         {props.children}
@@ -41,7 +37,6 @@ const Comment = (props: PropsWithChildren) => {
           </div>
         </div>
       )}
->>>>>>> 19ac1e0 (Added reply to comment functionality)
     </div>
   );
 };
