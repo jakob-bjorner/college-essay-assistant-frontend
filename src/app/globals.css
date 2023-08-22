@@ -29,3 +29,9 @@ body {
 .dark .bg-black-white {
   background-color: white;
 }
+
+.cledge-text {
+  padding: 20px;
+  color: blue;
+  font-size: 24px;
+}
