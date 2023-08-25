@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 
 import TipTap from "../components/TextEditor";
-import Comment from "../components/Comment";
+import Comment from "../components/SectionCommentReply";
 import LogInBtn from "../components/LogInBtn";
 
 import CustomBubbleMenu from "@/components/CustomBubbleMenu";
@@ -15,18 +15,25 @@ import config from "../tiptap.config";
 import ExtendablePanels from "@/components/ExtendablePanels";
 import ThemeButtons from "@/components/ThemeButtons";
 import type { AppProps } from "next/app";
+import SectionComment from "@/components/SectionComment";
 // session will be passed into the pageProps: https://stackoverflow.com/questions/73668032/nextauth-type-error-property-session-does-not-exist-on-type
 export default function Home() {
-  const [comments, setComments] = useState<string[]>([]);
+  const [comments, setComments] = useState<
+    { selectedText: string; commentText: string }[]
+  >([]);
   const onUpdate = ({ editor }: { editor: Editor }) => {
-    const tempComments: string[] = [];
+    const tempComments: { selectedText: string; commentText: string }[] = [];
     editor.state.doc.descendants((node, pos) => {
       const { marks } = node;
       marks.forEach((mark) => {
         if (mark.type.name == "comment") {
           const markComments = mark.attrs.comment;
-
-          tempComments.push(markComments);
+          console.log(editor.getHTML());
+          console.log(mark);
+          tempComments.push({
+            selectedText: "temp",
+            commentText: markComments,
+          });
         }
       });
     });
@@ -55,9 +62,14 @@ export default function Home() {
             </div>
           }
           panel_two={
-            <div className="m-2 grid gap-2">
+            <div className="m-2 grid gap-2 h-fit w-full">
               {comments.map((comment, i) => (
-                <Comment key={i}>{comment}</Comment>
+                <SectionComment
+                  selectedText={comment.selectedText}
+                  fullEssay={editor?.getHTML() || ""}
+                  commentText={comment.commentText}
+                  key={i}
+                ></SectionComment>
               ))}
             </div>
           }

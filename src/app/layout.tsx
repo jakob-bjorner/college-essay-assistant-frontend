@@ -22,7 +22,8 @@ export default async function RootLayout({
   return (
     <html lang="en" className={scheme === "dark" ? "dark" : ""}>
       <body className={inter.className}>
-        <NextAuthProvider>{children}</NextAuthProvider>
+        {children}
+        {/* <NextAuthProvider>{children}</NextAuthProvider> */}
       </body>
     </html>
   );
