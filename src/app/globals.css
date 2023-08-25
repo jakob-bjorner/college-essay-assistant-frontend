@@ -2,7 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-
 .dark body{
   color: rgb(255, 255, 255);
   background: linear-gradient(
@@ -28,4 +27,79 @@ body {
 }
 .dark .bg-black-white {
   background-color: white;
+}
+
+.cledge-text {
+  padding: 20px;
+  color: #5271FF;
+  font-size: 32px;
+  font-family: "Gotham", sans-serif;
+}
+
+.gradient-box {
+  background: linear-gradient(white, white) padding-box,
+              linear-gradient(to right, #5271FF, #CB6CE6) border-box;
+  border-radius: 10px;
+  border: 4px solid transparent;
+  margin-left: 10px;
+  margin-right: 10px;
+  padding: 20px;
+  width: 700px; /* Adjust the width as needed */
+  height: 500px;
+}
+
+.rounded-box {
+  margin-left: 20px;
+  background:linear-gradient(to right, #D9D9D9, #D9D9D9) border-box;
+  height: 50px;
+  width: 1400px;
+  border-radius: 15px;
+  border: 4px solid transparent;
+  padding: 20px;
+}
+
+.essays-rounded-box-pressed {
+  margin-right: 20px;
+  background: linear-gradient(to right, #5271FF, #5271FF);
+  color: white;
+  height: 40px;
+  width: 300px;
+  border-radius: 50px;
+  padding: 10px 20px;
+}
+
+.essays-rounded-box-not-pressed {
+  margin-right: 20px;
+  background: linear-gradient(to right, #D9D9D9, #D9D9D9);
+  color: #5271FF;
+  height: 40px;
+  width: 280px;
+  border-radius: 50px;
+  padding: 10px 20px;
+}
+
+.comment-first {
+  background: linear-gradient(to right, #D9D9D9, #D9D9D9);
+  color: black;
+  height: 40px;
+  width: 300px;
+  padding: 10px 20px;
+  border-radius: 20px 20px 0px 0px;
+}
+
+.comment-default {
+  background: linear-gradient(to right, #D9D9D9, #D9D9D9);
+  color: black;
+  height: 40px;
+  width: 300px;
+  padding: 10px 20px;
+}
+
+.comment-last {
+  background: linear-gradient(to right, #D9D9D9, #D9D9D9);
+  color: black;
+  height: 40px;
+  width: 300px;
+  padding: 10px 20px;
+  border-radius: 0px 0px 20px 20px;
 }
