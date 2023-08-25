@@ -15,24 +15,25 @@ const Comment = (props: PropsWithChildren) => {
   
   return (
     <div className="text-gray-200 p-2">
-      <div className="dark:bg-gray-700 dark:text-gray-400 bg-white text-black p-2 rounded-md w-full">
+      <div className="comment-first">
         {props.children}
       </div>
       {isInputVisible ? (
-        <div className="dark:bg-gray-700 dark:text-gray-400 bg-white text-black p-2 rounded-md w-full">
+        <div className="comment-last">
           <input
             type="text"
             id="message"
             name="message"
+            placeholder="Reply..."
             onKeyDown={handleKeyDown}
           />
         </div>
       ) : (
         <div>
-          <div className="dark:bg-gray-700 dark:text-gray-400 bg-white text-black p-2 rounded-md w-full">
+          <div className="comment-default">
             {userResponse}
           </div>
-          <div className="dark:bg-gray-700 dark:text-gray-400 bg-white text-black p-2 rounded-md w-full">
+          <div className="comment-last">
             Response Loading...
           </div>
         </div>

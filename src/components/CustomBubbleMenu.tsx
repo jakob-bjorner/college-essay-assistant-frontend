@@ -1,5 +1,6 @@
 import { BubbleMenu, Editor } from "@tiptap/react";
 import axios from "axios";
+
 export default function CustomBubbleMenu(props: { editor: Editor | null }) {
   const setBold = () => {
     props.editor?.chain().focus().toggleBold().run();

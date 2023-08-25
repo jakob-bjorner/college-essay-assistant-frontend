@@ -50,26 +50,83 @@ export default function Home() {
         <div className="cledge-text">
           cledge.
         </div>
-        <div className="flex ml-16 mr-16 mt-4">
-          {/* <LogInBtn></LogInBtn> */}
 
-          <ExtendablePanels
-            panel_one={
-              <div className="dark:bg-gray-700 dark:text-gray-400 bg-gray-200 text-black p-2 m-2 rounded-md focus:outline-none max-h-[95vh] overflow-auto">
-                <CustomBubbleMenu editor={editor} />
-                <TipTap editor={editor} />
+        <div className="rounded-box"> 
+          {/* Add Icons for editing here */}
+        </div>
+
+        <div className="flex mt-4">
+          {/* <LogInBtn></LogInBtn> */}
+          <div> 
+            <div className="essays-boxes ml-4 mt-4">
+              <div className="essays-rounded-box-pressed">
+                UW Essays
               </div>
-            }
-            panel_two={
-              <div className="m-2 grid gap-2">
-                {comments.map((comment, i) => (
-                  <Comment key={i}>{comment}</Comment>
-                ))}
+            </div>
+
+            <div className="essays-boxes ml-4 mt-4">
+              <div className="essays-rounded-box-not-pressed">
+                Stanford Essays
               </div>
-            }
-            unique_panel_id={"panel_one"}
-            panel_one_width={100}
-          />
+            </div>
+
+            <div className="essays-boxes ml-4 mt-4">
+              <div className="essays-rounded-box-not-pressed">
+                Georgia Tech Essays
+              </div>
+            </div>
+
+            <div className="essays-boxes ml-4 mt-4">
+              <div className="essays-rounded-box-not-pressed">
+                Stanford Essays
+              </div>
+            </div>
+
+            <div className="essays-boxes ml-4 mt-4">
+              <div className="essays-rounded-box-not-pressed">
+                UC Essays
+              </div>
+            </div>
+
+            <div className="essays-boxes ml-4 mt-4">
+              <div className="essays-rounded-box-not-pressed">
+                MIT Essays
+              </div>
+            </div>
+
+            <div className="essays-boxes ml-4 mt-4">
+              <div className="essays-rounded-box-not-pressed">
+                Harvard Essays
+              </div>
+            </div>
+
+            <div className="essays-boxes ml-4 mt-4">
+              <div className="essays-rounded-box-not-pressed">
+                Northeastern Essays
+              </div>
+            </div>
+          </div>
+
+          <div className="mr-16 mt-4">
+            <ExtendablePanels
+              panel_one={
+                <div className="gradient-box ml-16">
+                  <CustomBubbleMenu editor={editor} />
+                  <TipTap editor={editor} />
+                </div>
+              }
+              panel_two={
+                <div className="m-2 grid gap-2">
+                  {comments.map((comment, i) => (
+                    <Comment key={i}>{comment}</Comment>
+                  ))}
+                </div>
+              }
+              unique_panel_id={"panel_one"}
+              panel_one_width={100}
+            />
+          </div>
+          
         </div>
       </div>
       
