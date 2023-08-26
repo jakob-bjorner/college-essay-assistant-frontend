@@ -19,7 +19,7 @@ export default function ExtendablePanels({
     let m_pos: number;
     const drag = document.getElementById(unique_panel_id + "-drag");
     const right_panel = document.getElementById(
-      unique_panel_id + "-right-panel"
+      unique_panel_id + "-right-panel",
     );
     const left_panel = document.getElementById(unique_panel_id + "-left-panel");
     const container = document.getElementById(unique_panel_id + "-container");
@@ -48,14 +48,14 @@ export default function ExtendablePanels({
         m_pos = e.x;
         document.addEventListener("mousemove", resize, false);
       },
-      false
+      false,
     );
     document.addEventListener(
       "mouseup",
       function () {
         document.removeEventListener("mousemove", resize, false);
       },
-      false
+      false,
     );
   }, []);
 

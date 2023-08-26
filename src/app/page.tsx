@@ -10,12 +10,11 @@ import TipTap from "../components/TextEditor";
 import Comment from "../components/Comment";
 import LogInBtn from "../components/LogInBtn";
 
-import CustomBubbleMenu from "@/components/CustomBubbleMenu";
-
 import config from "../tiptap.config";
 import ExtendablePanels from "@/components/ExtendablePanels";
 import ThemeButtons from "@/components/ThemeButtons";
 import type { AppProps } from "next/app";
+import Toolbar from "@/components/Toolbar";
 // session will be passed into the pageProps: https://stackoverflow.com/questions/73668032/nextauth-type-error-property-session-does-not-exist-on-type
 
 export default function Home() {
@@ -47,21 +46,15 @@ export default function Home() {
   return (
     <main>
       <div>
-        <div className="cledge-text">
-          cledge.
-        </div>
+        <div className="cledge-text">cledge.</div>
 
-        <div className="rounded-box"> 
-          {/* Add Icons for editing here */}
-        </div>
+        <Toolbar editor={editor} />
 
         <div className="flex mt-4">
           {/* <LogInBtn></LogInBtn> */}
-          <div> 
+          <div>
             <div className="essays-boxes ml-4 mt-4">
-              <div className="essays-rounded-box-pressed">
-                UW Essays
-              </div>
+              <div className="essays-rounded-box-pressed">UW Essays</div>
             </div>
 
             <div className="essays-boxes ml-4 mt-4">
@@ -83,15 +76,11 @@ export default function Home() {
             </div>
 
             <div className="essays-boxes ml-4 mt-4">
-              <div className="essays-rounded-box-not-pressed">
-                UC Essays
-              </div>
+              <div className="essays-rounded-box-not-pressed">UC Essays</div>
             </div>
 
             <div className="essays-boxes ml-4 mt-4">
-              <div className="essays-rounded-box-not-pressed">
-                MIT Essays
-              </div>
+              <div className="essays-rounded-box-not-pressed">MIT Essays</div>
             </div>
 
             <div className="essays-boxes ml-4 mt-4">
@@ -111,7 +100,6 @@ export default function Home() {
             <ExtendablePanels
               panel_one={
                 <div className="gradient-box ml-16">
-                  <CustomBubbleMenu editor={editor} />
                   <TipTap editor={editor} />
                 </div>
               }
@@ -126,10 +114,9 @@ export default function Home() {
               panel_one_width={100}
             />
           </div>
-          
         </div>
       </div>
-      
+
       <ThemeButtons></ThemeButtons>
       {/* <Link href="/demo_backend">Go to demo backend</Link> */}
     </main>
