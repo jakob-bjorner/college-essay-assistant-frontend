@@ -76,9 +76,10 @@ export default function ExtendablePanels({
             height: "100%",
             left: panel_one_width,
             width: "7px",
+            zIndex: 9,
           }}
         ></div>
-        {panel_two}
+        <div className="w-full" style={{ zIndex: 8 }}>{panel_two}</div>
       </div>
     </div>
   );

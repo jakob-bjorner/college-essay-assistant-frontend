@@ -103,10 +103,10 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="mr-16 mt-4">
+          <div className="mr-16 mt-4 w-full">
             <ExtendablePanels
               panel_one={
-                <div className="gradient-box ml-16">
+                <div className="gradient-box ml-16 w-full">
                   <CustomBubbleMenu editor={editor} />
                   <TipTap editor={editor} />
                 </div>
@@ -125,6 +125,7 @@ export default function Home() {
               }
               unique_panel_id={"panel_one"}
               panel_one_width={100}
+              panel_two_min_width={200}
             />
           </div>
         </div>

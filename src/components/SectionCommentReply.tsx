@@ -41,15 +41,17 @@ const SectionCommentReply = ({
     });
   };
 
-  const handleUserResponse: React.KeyboardEventHandler<HTMLTextAreaElement> =
+  const handleUserResponse: React.KeyboardEventHandler<HTMLDivElement> =
     useCallback(
-      (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
+      (event: React.KeyboardEvent<HTMLDivElement>) => {
         // when enter is pressed convert the textarea to an uneditable div with the text
         if (event.key === "Enter") {
           event.preventDefault();
           const allComments = newGetPriorComments();
           setAiResponseString(JSON.stringify(allComments));
-          event.currentTarget.disabled = true;
+          event.currentTarget.contentEditable = "false";
+          event.currentTarget.className =
+            "comment user-comment dark:bg-gray-700 dark:text-gray-400 bg-gray-200 text-black p-2 rounded-md w-full";
         }
       },
       [newGetPriorComments, setAiResponseString]
@@ -61,12 +63,13 @@ const SectionCommentReply = ({
         {aiText}
       </div>
       <div className="comment user-comment dark:bg-gray-700 dark:text-gray-400 bg-gray-200 text-black p-2 rounded-md w-full">
-        <textarea
+        <div
+          contentEditable={true}
           onKeyDown={handleUserResponse}
           className="outline-none resize-none h-min text-black w-full content-fit"
           onChange={(e) => setUserResponse(e.target.value)}
           value={userResponse}
-        ></textarea>
+        ></div>
       </div>
       {aiResponseString && (
         <SectionCommentReply
