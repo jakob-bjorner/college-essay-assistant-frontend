@@ -15,7 +15,7 @@ declare module "@tiptap/core" {
       /**
        * Set a comment mark
        */
-      setComment: (comment: string) => ReturnType;
+      setComment: (comment: string, commentId: string) => ReturnType;
       /**
        * Toggle a comment mark
        */
@@ -38,12 +38,6 @@ export const Comment = Mark.create<CommentOptions>({
     };
   },
 
-  addStorage() {
-    return {
-      count: 0,
-    };
-  },
-
   addAttributes() {
     return {
       comment: {
@@ -52,7 +46,13 @@ export const Comment = Mark.create<CommentOptions>({
         renderHTML: (attrs) => ({
           "data-comment": attrs.comment,
           style: "background-color: #ff0",
-          id: `comment-${this.storage.count++}`,
+        }),
+      },
+      commentId: {
+        default: null,
+        parseHTML: (el) => (el as HTMLSpanElement).getAttribute("data-comment"),
+        renderHTML: (attrs) => ({
+          id: `comment-${attrs.commentId}`,
         }),
       },
     };
@@ -80,9 +80,9 @@ export const Comment = Mark.create<CommentOptions>({
   addCommands() {
     return {
       setComment:
-        (comment: string) =>
+        (comment: string, commentId: string) =>
         ({ commands }) =>
-          commands.setMark("comment", { comment }),
+          commands.setMark("comment", { comment, commentId }),
       toggleComment:
         () =>
         ({ commands }) =>
