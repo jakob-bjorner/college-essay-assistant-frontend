@@ -24,7 +24,11 @@ export default function Toolbar(props: { editor: Editor | null }) {
   };
 
   const setComment = () => {
-    props.editor?.chain().focus().setComment("filler text for now").run();
+    props.editor
+      ?.chain()
+      .focus()
+      .setComment("filler text for now", "xxx")
+      .run();
     replaceComment("filler text for now");
   };
 
