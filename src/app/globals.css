@@ -44,7 +44,7 @@ body {
   margin-left: 10px;
   margin-right: 10px;
   padding: 20px;
-  height: 500px;
+  /* height: 500px; */
 }
 
 .rounded-box {
@@ -55,6 +55,7 @@ body {
   border-radius: 15px;
   border: 4px solid transparent;
   padding: 20px;
+  vertical-align: middle;
 }
 
 .essays-rounded-box-pressed {

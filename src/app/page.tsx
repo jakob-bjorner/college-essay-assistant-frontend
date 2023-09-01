@@ -10,13 +10,12 @@ import TipTap from "../components/TextEditor";
 import Comment from "../components/SectionCommentReply";
 import LogInBtn from "../components/LogInBtn";
 
-import CustomBubbleMenu from "@/components/CustomBubbleMenu";
-
 import config from "../tiptap.config";
 import ExtendablePanels from "@/components/ExtendablePanels";
 import ThemeButtons from "@/components/ThemeButtons";
 import type { AppProps } from "next/app";
 import SectionComment from "@/components/SectionComment";
+import Toolbar from "@/components/Toolbar";
 // session will be passed into the pageProps: https://stackoverflow.com/questions/73668032/nextauth-type-error-property-session-does-not-exist-on-type
 
 export default function Home() {
@@ -25,6 +24,7 @@ export default function Home() {
   >([]);
   const onUpdate = ({ editor }: { editor: Editor }) => {
     const tempComments: { selectedText: string; commentText: string }[] = [];
+    // search through child elements of the posemirror text editor and look for 
     editor.state.doc.descendants((node, pos) => {
       const { marks } = node;
       marks.forEach((mark) => {
@@ -56,7 +56,7 @@ export default function Home() {
       <div>
         <div className="cledge-text">cledge.</div>
 
-        <div className="rounded-box">{/* Add Icons for editing here */}</div>
+        <Toolbar editor={editor} />
 
         <div className="flex mt-4">
           {/* <LogInBtn></LogInBtn> */}
@@ -106,8 +106,7 @@ export default function Home() {
           <div className="mr-16 mt-4 w-full">
             <ExtendablePanels
               panel_one={
-                <div className="gradient-box ml-16 w-full">
-                  <CustomBubbleMenu editor={editor} />
+                <div className="gradient-box ml-16">
                   <TipTap editor={editor} />
                 </div>
               }
@@ -124,7 +123,8 @@ export default function Home() {
                 </div>
               }
               unique_panel_id={"panel_one"}
-              panel_one_width={100}
+              panel_one_width={200}
+              panel_one_min_width={200}
               panel_two_min_width={200}
             />
           </div>

@@ -1,21 +1,37 @@
-import { BubbleMenu, Editor } from "@tiptap/react";
+import { Editor } from "@tiptap/react";
+
 import axios from "axios";
 
-export default function CustomBubbleMenu(props: { editor: Editor | null }) {
+export default function Toolbar(props: { editor: Editor | null }) {
   const setBold = () => {
     props.editor?.chain().focus().toggleBold().run();
   };
-  const setItalic = () => props.editor?.chain().focus().toggleItalic().run();
+
+  const setStrikethrough = () => {
+    props.editor?.chain().focus().toggleStrike().run();
+  };
+
+  const setItalic = () => {
+    props.editor?.chain().focus().toggleItalic().run();
+  };
+
+  const setUnderline = () => {
+    props.editor?.chain().focus().toggleUnderline().run();
+  };
+
+  const undo = () => {
+    props.editor?.chain().undo().run();
+  };
 
   const setComment = () => {
     props.editor?.chain().focus().setComment("filler text for now").run();
     replaceComment("filler text for now");
   };
+
   function sleep(ms: number) {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
-  // create a function to call in set comment which takes in the temporary text put in the comment, and replaces it with the actual comment after getting text response from the backend.
   const replaceComment = async (comment: string) => {
     await sleep(100);
     // locate the selected text in the editor which is found by <span data-comment="filler text for now">
@@ -49,7 +65,7 @@ export default function CustomBubbleMenu(props: { editor: Editor | null }) {
         console.log(
           "selected text ERROR",
           selectedText,
-          props.editor?.getText(),
+          props.editor?.getText()
         );
         return "ERROR: No text selected.";
       }
@@ -61,7 +77,7 @@ export default function CustomBubbleMenu(props: { editor: Editor | null }) {
       document,
       null,
       XPathResult.FIRST_ORDERED_NODE_TYPE,
-      null,
+      null
     ).singleNodeValue;
     // replace the filler text with the actual comment
     if (commentElement) {
@@ -71,24 +87,38 @@ export default function CustomBubbleMenu(props: { editor: Editor | null }) {
     }
   };
 
-  const btnStyle = "border border-white rounded p-2 text-white bg-black";
-
   return (
-    <>
-      {props.editor ? (
-        <BubbleMenu editor={props.editor} className="flex gap-1">
-          <button onClick={setBold} className={btnStyle}>
-            <strong>Bold</strong>
-          </button>
-          <button onClick={setItalic} className={btnStyle}>
-            <em>Italic</em>
-          </button>
-          <button onClick={setComment} className={btnStyle}>
-            {/* add highlight styling to the comment button text */}
-            <span className="">Get Comment</span>
-          </button>
-        </BubbleMenu>
-      ) : undefined}
-    </>
+    <div className="border-2 border-box p-4 m-2 rounded-lg bg-box w-[1375px]">
+      <button onClick={undo} className="rounded ml-2 p-2 hover:bg-gray-200">
+        {String.fromCodePoint(0x238c)}
+      </button>
+      <button onClick={setBold} className="rounded ml-2 p-2 hover:bg-gray-200">
+        <b>B</b>
+      </button>
+      <button
+        onClick={setStrikethrough}
+        className="rounded ml-2 p-2 hover:bg-gray-200"
+      >
+        <s>S</s>
+      </button>
+      <button
+        onClick={setItalic}
+        className="rounded ml-2 p-2 hover:bg-gray-200"
+      >
+        <i>I</i>
+      </button>
+      <button
+        onClick={setUnderline}
+        className="rounded ml-2 p-2 hover:bg-gray-200"
+      >
+        <span className="underline">U</span>
+      </button>
+      <button
+        onClick={setComment}
+        className="rounded ml-2 p-2 hover:bg-gray-200"
+      >
+        {String.fromCodePoint(0x0001f5e8)}
+      </button>
+    </div>
   );
 }

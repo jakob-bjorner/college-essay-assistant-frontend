@@ -6,6 +6,8 @@ import Strike from "@tiptap/extension-strike";
 import Text from "@tiptap/extension-text";
 import BubbleMenu from "@tiptap/extension-bubble-menu";
 import Paragraph from "@tiptap/extension-paragraph";
+import History from "@tiptap/extension-history";
+import Underline from "@tiptap/extension-underline";
 
 import { Comment } from "./extensions/Comment";
 
@@ -20,8 +22,11 @@ const config = {
     Strike,
     Text,
     Comment,
-    BubbleMenu,
     Paragraph,
+    Underline,
+    History.configure({
+      depth: 10,
+    }),
   ],
   editorProps: {
     attributes: {
