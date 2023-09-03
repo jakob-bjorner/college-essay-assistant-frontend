@@ -69,7 +69,7 @@ export default function Toolbar(props: { editor: Editor | null }) {
         console.log(
           "selected text ERROR",
           selectedText,
-          props.editor?.getText()
+          props.editor?.getText(),
         );
         return "ERROR: No text selected.";
       }
@@ -81,7 +81,7 @@ export default function Toolbar(props: { editor: Editor | null }) {
       document,
       null,
       XPathResult.FIRST_ORDERED_NODE_TYPE,
-      null
+      null,
     ).singleNodeValue;
     // replace the filler text with the actual comment
     if (commentElement) {

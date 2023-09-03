@@ -17,7 +17,7 @@ const SectionCommentReply = ({
   getPriorComments?: () => { role: string; content: string }[];
 }) => {
   const [userResponse, setUserResponse] = React.useState<string>(
-    "hello there what is up with that medical insurance company policy? Isnt insurance a perfectly competitive market? Like why in the world would they not have lower prices? Unless you actually pay people more in medicine."
+    "hello there what is up with that medical insurance company policy? Isnt insurance a perfectly competitive market? Like why in the world would they not have lower prices? Unless you actually pay people more in medicine.",
   );
   const [aiResponseString, setAiResponseString] = React.useState<string>("");
 
@@ -54,7 +54,7 @@ const SectionCommentReply = ({
             "comment user-comment dark:bg-gray-700 dark:text-gray-400 bg-gray-200 text-black p-2 rounded-md w-full";
         }
       },
-      [newGetPriorComments, setAiResponseString]
+      [newGetPriorComments, setAiResponseString],
     );
 
   return (

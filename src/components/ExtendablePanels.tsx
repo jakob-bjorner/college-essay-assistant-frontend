@@ -57,7 +57,7 @@ export default function ExtendablePanels({
       },
       false,
     );
-  }, []);
+  }, [panel_one_min_width, panel_two_min_width, unique_panel_id]);
 
   return (
     <div className="flex flex-row w-full" id={unique_panel_id + "-container"}>
@@ -79,7 +79,9 @@ export default function ExtendablePanels({
             zIndex: 9,
           }}
         ></div>
-        <div className="w-full" style={{ zIndex: 8 }}>{panel_two}</div>
+        <div className="w-full" style={{ zIndex: 8 }}>
+          {panel_two}
+        </div>
       </div>
     </div>
   );

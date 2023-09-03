@@ -1,8 +1,9 @@
 {
-  "editor.codeActionsOnSave": {
+  "editor.codeActionsOnSave": { // helped with adding trailing commas
     "source.fixAll.eslint": true
   },
   "deno.enable": false,
-  "eslint.enable": true,
+  // "eslint.enable": true,
+  // "editor.formatOnSave": true, // did't have to be enabled for above codeActionsOnSave to work.
   "editor.tabSize": 2,
 }
