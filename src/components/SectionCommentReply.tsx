@@ -28,18 +28,18 @@ const SectionCommentReply = ({
     return allComments;
   }, [getPriorComments, aiText, userResponse]);
 
-  const commentResponse = async () => {
-    return await axios({
-      method: "post",
-      url: "/backend/bot/feedback",
-      data: {
-        full_essay: props.editor?.getText(),
-        section_to_review: selectedText,
-      },
-    }).then((response) => {
-      return response.data;
-    });
-  };
+  // const commentResponse = async () => {
+  //   return await axios({
+  //     method: "post",
+  //     url: "/backend/bot/feedback",
+  //     data: {
+  //       full_essay: props.editor?.getText(),
+  //       section_to_review: selectedText,
+  //     },
+  //   }).then((response) => {
+  //     return response.data;
+  //   });
+  // };
 
   const handleUserResponse: React.KeyboardEventHandler<HTMLDivElement> =
     useCallback(
@@ -67,14 +67,15 @@ const SectionCommentReply = ({
           contentEditable={true}
           onKeyDown={handleUserResponse}
           className="outline-none resize-none h-min text-black w-full content-fit"
-          onChange={(e) => setUserResponse(e.target.value)}
-          value={userResponse}
+          // onChange={(e) => setUserResponse(e.target.innerHTML)} // TODO: fix the moving of text on change of the div.
         ></div>
       </div>
       {aiResponseString && (
         <SectionCommentReply
           getPriorComments={newGetPriorComments}
           aiText={aiResponseString}
+          fullEssay=""
+          selectedText=""
         ></SectionCommentReply>
       )}
     </>

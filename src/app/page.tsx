@@ -1,6 +1,6 @@
 "use client";
 
-import { Session } from "next-auth";
+// import { Session } from "next-auth";
 import { useEditor } from "@tiptap/react";
 import type { Editor } from "@tiptap/core";
 import { useEffect, useState } from "react";
@@ -8,7 +8,7 @@ import Link from "next/link";
 
 import TipTap from "../components/TextEditor";
 import Comment from "../components/SectionCommentReply";
-import LogInBtn from "../components/LogInBtn";
+// import LogInBtn from "../../to be moved back to src app/LogInBtn";
 
 import config from "../tiptap.config";
 import ExtendablePanels from "@/components/ExtendablePanels";
@@ -24,7 +24,6 @@ export default function Home() {
   >([]);
   const onUpdate = ({ editor }: { editor: Editor }) => {
     const tempComments: { selectedText: string; commentText: string }[] = [];
-    // search through child elements of the posemirror text editor and look for 
     editor.state.doc.descendants((node, pos) => {
       const { marks } = node;
       marks.forEach((mark) => {

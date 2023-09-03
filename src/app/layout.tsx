@@ -1,11 +1,11 @@
-import { Session } from "next-auth";
 import "./globals.css";
 import type { Metadata } from "next";
-import { SessionProvider } from "next-auth/react";
 import { Inter } from "next/font/google";
 import { Component } from "react";
 import { AppProps } from "next/app";
-import { NextAuthProvider } from "./providers";
+// import { Session } from "next-auth";
+// import { SessionProvider } from "next-auth/react";
+// import { NextAuthProvider } from "./providers";
 import { getCurrentScheme } from "@/utils/colorScheme";
 const inter = Inter({ subsets: ["latin"] });
 
