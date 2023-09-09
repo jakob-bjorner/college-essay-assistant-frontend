@@ -7,6 +7,12 @@ module.exports = {
   ],
   theme: {
     extend: {
+      gridTemplateColumns: {
+        sidebar: "300px auto",
+      }, 
+      gridTemplateRows: {
+        header: "64px auto",
+      },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
         "gradient-conic":

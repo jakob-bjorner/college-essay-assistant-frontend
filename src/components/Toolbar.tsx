@@ -1,6 +1,6 @@
 import { Editor } from "@tiptap/react";
-
 import axios from "axios";
+import ThemeButtons from "@/components/ThemeButtons";
 
 export default function Toolbar(props: { editor: Editor | null }) {
   const setBold = () => {
@@ -92,37 +92,37 @@ export default function Toolbar(props: { editor: Editor | null }) {
   };
 
   return (
-    <div className="border-2 border-box p-4 m-2 rounded-lg bg-box w-[1375px]">
-      <button onClick={undo} className="rounded ml-2 p-2 hover:bg-gray-200">
+    <div className="flex flex-row border-2 border-box p-2 md:p-4 m-2 rounded-lg bg-box space-x-4"> {/* Increased spacing */}
+      <button onClick={undo} className="text-black rounded p-3 md:p-4 hover:bg-gray-200 text-2xl"> {/* Changed text color to black */}
         {String.fromCodePoint(0x238c)}
       </button>
-      <button onClick={setBold} className="rounded ml-2 p-2 hover:bg-gray-200">
+      <button onClick={setBold} className="text-black rounded p-3 md:p-4 hover:bg-gray-200 text-2xl"> {/* Changed text color to black */}
         <b>B</b>
       </button>
       <button
         onClick={setStrikethrough}
-        className="rounded ml-2 p-2 hover:bg-gray-200"
-      >
+        className="text-black rounded p-3 md:p-4 hover-bg-gray-200 text-2xl"> {/* Changed text color to black */}
         <s>S</s>
       </button>
       <button
         onClick={setItalic}
-        className="rounded ml-2 p-2 hover:bg-gray-200"
-      >
+        className="text-black rounded p-3 md:p-4 hover:bg-gray-200 text-2xl"> {/* Changed text color to black */}
         <i>I</i>
       </button>
       <button
         onClick={setUnderline}
-        className="rounded ml-2 p-2 hover:bg-gray-200"
-      >
+        className="text-black rounded p-3 md:p-4 hover:bg-gray-200 text-2xl"> {/* Changed text color to black */}
         <span className="underline">U</span>
       </button>
       <button
         onClick={setComment}
-        className="rounded ml-2 p-2 hover:bg-gray-200"
-      >
+        className="text-black rounded p-3 md:p-4 hover:bg-gray-200 text-2xl"> {/* Changed text color to black */}
         {String.fromCodePoint(0x0001f5e8)}
       </button>
+      <div className="rounded-md p-2 md:p-3 hover:bg-gray-700">
+        <ThemeButtons />
+      </div>
+      
     </div>
   );
 }
