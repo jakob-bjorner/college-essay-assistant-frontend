@@ -44,6 +44,12 @@ export default function Home() {
   const editor = useEditor({
     onUpdate: onUpdate,
     ...config,
+    editorProps: {
+      attributes: {
+        class:
+          "dark:bg-gray-700 dark:text-gray-400 bg-white text-black w-full rounded-md",
+      },
+    },
   });
 
   useEffect(() => {
