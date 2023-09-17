@@ -11,7 +11,6 @@ import LogoIcon from "@/components/icons/Logo";
 import LogoutIcon from "@/components/icons/LogoutIcon";
 import UsersIcon from "@/components/icons/UsersIcon";
 
-
 const menuItems = [
   { id: 1, label: "UW Essays", icon: ArticleIcon, link: "/" },
   // { id: 2, label: "Home", icon: HomeIcon, link: "/posts" },
@@ -24,10 +23,9 @@ export default function Sidebar() {
   const [toggleCollapse, setToggleCollapse] = useState(false);
   const [isCollapsible, setIsCollapsible] = useState(false);
 
-
   const activeMenu = useMemo(
     () => menuItems.find((menu) => menu.link === pathname),
-    [pathname]
+    [pathname],
   );
 
   const wrapperClasses = classNames(
@@ -35,22 +33,26 @@ export default function Sidebar() {
     {
       ["w-80"]: !toggleCollapse,
       ["w-20"]: toggleCollapse,
-    }
+    },
   );
 
   const collapseIconClasses = classNames(
     "p-4 rounded bg-light-lighter absolute right-0",
     {
       "rotate-180": toggleCollapse,
-    }
+    },
   );
 
-  const getNavItemClasses = (menu: { id: number; label: string; link: string; }) => {
+  const getNavItemClasses = (menu: {
+    id: number;
+    label: string;
+    link: string;
+  }) => {
     return classNames(
       "flex items-center cursor-pointer hover:bg-light-lighter rounded w-full overflow-hidden whitespace-nowrap",
       {
         ["bg-light-lighter"]: activeMenu && activeMenu.id === menu.id,
-      }
+      },
     );
   };
 
@@ -104,7 +106,7 @@ export default function Sidebar() {
                     {!toggleCollapse && (
                       <span
                         className={classNames(
-                          "text-md font-medium text-text-light"
+                          "text-md font-medium text-text-light",
                         )}
                       >
                         {menu.label}
@@ -118,7 +120,13 @@ export default function Sidebar() {
         </div>
       </div>
 
-      <div className={`${getNavItemClasses({ id: 0, label: "", link: "" })} px-3 py-4`}>
+      <div
+        className={`${getNavItemClasses({
+          id: 0,
+          label: "",
+          link: "",
+        })} px-3 py-4`}
+      >
         <div style={{ width: "2.5rem" }}>
           <LogoutIcon />
         </div>
@@ -130,4 +138,4 @@ export default function Sidebar() {
       </div>
     </div>
   );
-};
+}

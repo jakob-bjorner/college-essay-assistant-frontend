@@ -25,14 +25,10 @@ export default async function RootLayout({
       <body className={inter.className}>
         <div className="h-screen flex flex-row justify-start">
           {/* <Sidebar /> */}
-          <div className="bg-primary flex-1 p-4 text-white">
-            {children}
-          </div>
+          <div className="bg-primary flex-1 p-4 text-white">{children}</div>
         </div>
         {/* <NextAuthProvider>{children}</NextAuthProvider> */}
       </body>
-
     </html>
   );
 }
-

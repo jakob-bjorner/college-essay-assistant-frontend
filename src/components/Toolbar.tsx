@@ -128,37 +128,60 @@ export default function Toolbar(props: {
   };
 
   return (
-    <div className="flex flex-row border-2 border-box p-2 md:p-4 m-2 rounded-lg bg-box space-x-4"> {/* Increased spacing */}
-      <button onClick={undo} className="text-black rounded p-3 md:p-4 hover:bg-gray-200 text-2xl"> {/* Changed text color to black */}
+    <div className="flex flex-row border-2 border-box p-2 md:p-4 m-2 rounded-lg bg-box space-x-4">
+      {" "}
+      {/* Increased spacing */}
+      <button
+        onClick={undo}
+        className="text-black rounded p-3 md:p-4 hover:bg-gray-200 text-2xl"
+      >
+        {" "}
+        {/* Changed text color to black */}
         {String.fromCodePoint(0x238c)}
       </button>
-      <button onClick={setBold} className="text-black rounded p-3 md:p-4 hover:bg-gray-200 text-2xl"> {/* Changed text color to black */}
+      <button
+        onClick={setBold}
+        className="text-black rounded p-3 md:p-4 hover:bg-gray-200 text-2xl"
+      >
+        {" "}
+        {/* Changed text color to black */}
         <b>B</b>
       </button>
       <button
         onClick={setStrikethrough}
-        className="text-black rounded p-3 md:p-4 hover-bg-gray-200 text-2xl"> {/* Changed text color to black */}
+        className="text-black rounded p-3 md:p-4 hover-bg-gray-200 text-2xl"
+      >
+        {" "}
+        {/* Changed text color to black */}
         <s>S</s>
       </button>
       <button
         onClick={setItalic}
-        className="text-black rounded p-3 md:p-4 hover:bg-gray-200 text-2xl"> {/* Changed text color to black */}
+        className="text-black rounded p-3 md:p-4 hover:bg-gray-200 text-2xl"
+      >
+        {" "}
+        {/* Changed text color to black */}
         <i>I</i>
       </button>
       <button
         onClick={setUnderline}
-        className="text-black rounded p-3 md:p-4 hover:bg-gray-200 text-2xl"> {/* Changed text color to black */}
+        className="text-black rounded p-3 md:p-4 hover:bg-gray-200 text-2xl"
+      >
+        {" "}
+        {/* Changed text color to black */}
         <span className="underline">U</span>
       </button>
       <button
         onClick={setComment}
-        className="text-black rounded p-3 md:p-4 hover:bg-gray-200 text-2xl"> {/* Changed text color to black */}
+        className="text-black rounded p-3 md:p-4 hover:bg-gray-200 text-2xl"
+      >
+        {" "}
+        {/* Changed text color to black */}
         {String.fromCodePoint(0x0001f5e8)}
       </button>
       <div className="rounded-md p-2 md:p-3 hover:bg-gray-700">
         <ThemeButtons />
       </div>
-      
     </div>
   );
 }
