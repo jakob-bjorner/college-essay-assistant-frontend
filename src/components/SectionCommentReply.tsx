@@ -1,81 +1,182 @@
+import {
+  MainComment,
+  UserSubComment,
+  AiSubComment,
+  CommentInterface,
+  IsMaintainingVersion,
+} from "@/types/types";
+import { Editor } from "@tiptap/react";
 import axios from "axios";
-import React, {
-  KeyboardEventHandler,
-  PropsWithChildren,
-  useCallback,
-} from "react";
+import React, { useCallback } from "react";
 
 const SectionCommentReply = ({
-  aiText,
-  fullEssay,
-  selectedText,
-  getPriorComments = () => [],
+  commentHistory,
+  subComment,
+  editor,
 }: {
-  aiText: string;
-  fullEssay: string;
-  selectedText: string;
-  getPriorComments?: () => { role: string; content: string }[];
+  commentHistory: MainComment;
+  subComment: CommentInterface | undefined;
+  editor: Editor | null;
 }) => {
-  const [userResponse, setUserResponse] = React.useState<string>(
-    "hello there what is up with that medical insurance company policy? Isnt insurance a perfectly competitive market? Like why in the world would they not have lower prices? Unless you actually pay people more in medicine.",
+  const [messageText, setMessageText] = React.useState<string>(
+    subComment?.text || "",
   );
-  const [aiResponseString, setAiResponseString] = React.useState<string>("");
+  if (
+    subComment !== undefined &&
+    subComment?.subComment === undefined &&
+    subComment.author === "AI"
+  ) {
+    subComment.subComment = {
+      text: "Please give me a better comment. Give an example of a successful essay!",
+      author: "User",
+      timestamp: new Date(),
+    };
+  }
+  const [subSubComment, setSubSubComment] =
+    React.useState<CommentInterface | null>(subComment?.subComment || null);
 
-  const newGetPriorComments = useCallback(() => {
-    const allComments = getPriorComments();
-    allComments.push({ role: "asssistant", content: aiText });
-    allComments.push({ role: "user", content: userResponse });
-    return allComments;
-  }, [getPriorComments, aiText, userResponse]);
-
-  // const commentResponse = async () => {
-  //   return await axios({
-  //     method: "post",
-  //     url: "/backend/bot/feedback",
-  //     data: {
-  //       full_essay: props.editor?.getText(),
-  //       section_to_review: selectedText,
-  //     },
-  //   }).then((response) => {
-  //     return response.data;
-  //   });
-  // };
-
-  const handleUserResponse: React.KeyboardEventHandler<HTMLDivElement> =
+  const handleUserResponse: React.KeyboardEventHandler<HTMLTextAreaElement> =
     useCallback(
-      (event: React.KeyboardEvent<HTMLDivElement>) => {
+      async (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
         // when enter is pressed convert the textarea to an uneditable div with the text
         if (event.key === "Enter") {
           event.preventDefault();
-          const allComments = newGetPriorComments();
-          setAiResponseString(JSON.stringify(allComments));
-          event.currentTarget.contentEditable = "false";
+          event.currentTarget.disabled = true;
+          event.currentTarget.style.minHeight = "fit-content";
           event.currentTarget.className =
             "comment user-comment dark:bg-gray-700 dark:text-gray-400 bg-gray-200 text-black p-2 rounded-md w-full";
+          if (subComment === undefined || subComment === null) {
+            throw new Error("subcomment is null or undefined");
+          }
+          if (editor === null) {
+            throw new Error("editor is null");
+          }
+          // find all spans with the id comment-XXX, and put all their text into a single string
+          let sectionToReviewString = "";
+          const spans = document.querySelectorAll(
+            `span[id^='comment-${commentHistory.id}']`,
+          );
+          spans.forEach((span) => {
+            sectionToReviewString += span.textContent;
+          });
+          // console.log(sectionToReviewString);
+
+          // update the subcomment for the user, so the comment History array that is created
+          // naturally contains the question the user just asked.
+          (subComment as UserSubComment).essaySectionReference =
+            sectionToReviewString;
+          (subComment as UserSubComment).versionOfEssay = editor?.getText();
+          // constuct a comment History to be fed into AI.
+          let commentCurr: CommentInterface | undefined = commentHistory;
+          const commentHistoryArray = [
+            {
+              role: "user",
+              content:
+                "Version of Essay: " +
+                "```" +
+                (commentCurr as MainComment).versionOfEssay +
+                "```" +
+                "\nSection to Review: " +
+                "```" +
+                (commentCurr as MainComment).essaySectionReference +
+                "```",
+            },
+          ];
+
+          while (commentCurr !== undefined) {
+            let commentSummary = {
+              role: commentCurr.author === "AI" ? "assistant" : "user",
+              content: "",
+            };
+            if (commentCurr.author === "AI") {
+              commentSummary.content = commentCurr.text;
+            } else {
+              const userComment = commentCurr as UserSubComment;
+              commentSummary.content +=
+                "Version of Essay: " +
+                "```" +
+                userComment.versionOfEssay +
+                "```";
+              commentSummary.content +=
+                "\nSection to Review: " +
+                "```" +
+                userComment.essaySectionReference +
+                "```";
+              commentSummary.content +=
+                "\nMessage: " + "```" + userComment.text + "```";
+            }
+            // console.log(commentCurr);
+            commentHistoryArray.push(commentSummary);
+            commentCurr = commentCurr.subComment;
+          }
+
+          // make post to backend for AI response
+          const aiResponse = await axios({
+            method: "post",
+            url: "/backend/bot/comment-reply",
+            data: {
+              full_essay: editor?.getText(),
+              section_to_review: sectionToReviewString,
+              comment_history: commentHistoryArray,
+            },
+          }).then((response) => {
+            return response.data;
+          });
+          // const aiResponse = "Test feedback string";
+          console.log(commentHistoryArray);
+
+          // create AI subcomment for display on retrieval (TODO: indicate wait on frontend or stream the text!)
+          subComment.subComment = {
+            text: aiResponse,
+            author: "AI",
+            timestamp: new Date(),
+          };
+          setSubSubComment(subComment.subComment);
         }
       },
-      [newGetPriorComments, setAiResponseString],
+      [editor, subComment, commentHistory],
     );
+  if (subComment === null || subComment === undefined) {
+    return <></>;
+  }
 
   return (
     <>
-      <div className="comment bot-comment dark:bg-gray-700 dark:text-gray-400 bg-gray-200 text-black p-2 rounded-md w-full">
-        {aiText}
-      </div>
-      <div className="comment user-comment dark:bg-gray-700 dark:text-gray-400 bg-gray-200 text-black p-2 rounded-md w-full">
-        <div
-          contentEditable={true}
-          onKeyDown={handleUserResponse}
-          className="outline-none resize-none h-min text-black w-full content-fit"
-          // onChange={(e) => setUserResponse(e.target.innerHTML)} // TODO: fix the moving of text on change of the div.
-        ></div>
-      </div>
-      {aiResponseString && (
+      {subComment?.author === "AI" ? (
+        <div className="comment bot-comment dark:bg-gray-700 dark:text-gray-400 bg-gray-200 text-black p-2 rounded-md w-full">
+          {messageText}
+        </div>
+      ) : (
+        <div className="comment user-comment dark:bg-gray-700 dark:text-gray-400 bg-gray-200 text-black p-2 rounded-md w-full">
+          <textarea
+            className="outline-none resize-none h-min text-black w-full content-fit"
+            // rows={1}
+            style={{
+              resize: "none",
+              height: "auto",
+              // maxHeight: "130px",
+              overflowWrap: "break-word",
+              width: "55vw",
+              minHeight: "90px",
+              outline: "none",
+              border: "1px solid #B2B0C4",
+              borderRadius: "6px",
+              padding: "6px",
+            }}
+            onKeyDown={handleUserResponse}
+            value={messageText}
+            onChange={(e) => {
+              subComment.text = e.target.value;
+              setMessageText(e.target.value);
+            }}
+          />
+        </div>
+      )}
+      {subSubComment && (
         <SectionCommentReply
-          getPriorComments={newGetPriorComments}
-          aiText={aiResponseString}
-          fullEssay=""
-          selectedText=""
+          commentHistory={commentHistory}
+          subComment={subSubComment}
+          editor={editor}
         ></SectionCommentReply>
       )}
     </>
