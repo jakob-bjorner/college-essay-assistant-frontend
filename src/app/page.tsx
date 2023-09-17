@@ -96,7 +96,7 @@ export default function Home() {
         <div className="mr-16 mt-4 w-full">
           <ExtendablePanels
             panel_one={
-              <div className="gradient-box ml-16 min-h-[400px] overflow-auto">
+              <div className="gradient-box ml-16 overflow-auto">
                 <TipTap editor={editor} />
               </div>
             }

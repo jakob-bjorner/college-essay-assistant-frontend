@@ -156,7 +156,7 @@ const SectionCommentReply = ({
               height: "auto",
               // maxHeight: "130px",
               overflowWrap: "break-word",
-              width: "55vw",
+              // width: "55vw",
               minHeight: "90px",
               outline: "none",
               border: "1px solid #B2B0C4",
