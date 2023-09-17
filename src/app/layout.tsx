@@ -7,6 +7,7 @@ import { AppProps } from "next/app";
 // import { SessionProvider } from "next-auth/react";
 // import { NextAuthProvider } from "./providers";
 import { getCurrentScheme } from "@/utils/colorScheme";
+import Sidebar from "../components/Sidebar";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -22,9 +23,16 @@ export default async function RootLayout({
   return (
     <html lang="en" className={scheme === "dark" ? "dark" : ""}>
       <body className={inter.className}>
-        {children}
+        <div className="h-screen flex flex-row justify-start">
+          {/* <Sidebar /> */}
+          <div className="bg-primary flex-1 p-4 text-white">
+            {children}
+          </div>
+        </div>
         {/* <NextAuthProvider>{children}</NextAuthProvider> */}
       </body>
+
     </html>
   );
 }
+

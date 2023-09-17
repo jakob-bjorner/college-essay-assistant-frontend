@@ -75,10 +75,9 @@ export default function Home() {
     editorProps: {
       attributes: {
         class:
-          "dark:bg-gray-700 dark:text-gray-400 bg-gray-200 text-black w-full rounded-md",
+          "dark:bg-gray-700 dark:text-gray-400 bg-white text-black w-full rounded-md",
       },
     },
-    // onUpdate: onUpdate,
   });
   // console.log(editor?.getText());
   // useEffect(() => {
@@ -89,89 +88,78 @@ export default function Home() {
 
   return (
     <main>
-      <div>
-        <div className="cledge-text">cledge.</div>
-        <Toolbar
-          editor={editor}
-          setComments={setComments}
-          comments={comments}
-        />
+      <div className="cledge-text">cledge.</div>
+      <Toolbar editor={editor} setComments={setComments} comments={comments} />
 
-        <div className="flex mt-4">
-          {/* <LogInBtn></LogInBtn> */}
-          <div>
-            <div className="essays-boxes ml-4 mt-4">
-              <div className="essays-rounded-box-pressed">UW Essays</div>
-            </div>
-
-            <div className="essays-boxes ml-4 mt-4">
-              <div className="essays-rounded-box-not-pressed">
-                Stanford Essays
+      <div className="flex mt-4">
+        {/* <LogInBtn></LogInBtn> */}
+        <div className="mr-16 mt-4 w-full">
+          <ExtendablePanels
+            panel_one={
+              <div className="gradient-box ml-16 min-h-[400px] overflow-auto">
+                <TipTap editor={editor} />
               </div>
-            </div>
-
-            <div className="essays-boxes ml-4 mt-4">
-              <div className="essays-rounded-box-not-pressed">
-                Georgia Tech Essays
+            }
+            panel_two={
+              <div className="m-2 grid gap-2 h-fit w-full">
+                {comments.map((comment, i) => (
+                  <SectionComment
+                    comment={comment}
+                    editor={editor}
+                    key={i}
+                  ></SectionComment>
+                ))}
               </div>
-            </div>
+            }
+            unique_panel_id={"panel_one"}
+            panel_one_width={200}
+            panel_one_min_width={200}
+            panel_two_min_width={200}
+          />
+        </div>
+      </div>
+      {/* <Link href="/demo_backend">Go to demo backend</Link> */}
+    </main>
+  );
+}
 
-            <div className="essays-boxes ml-4 mt-4">
-              <div className="essays-rounded-box-not-pressed">
-                Stanford Essays
-              </div>
-            </div>
-            <div className="essays-boxes ml-4 mt-4">
-              <div className="essays-rounded-box-not-pressed">UC Essays</div>
-            </div>
+function FilesTab() {
+  return (
+    <div>
+      <div className="essays-boxes ml-4 mt-4">
+        <div className="essays-rounded-box-pressed">UW Essays</div>
+      </div>
 
-            <div className="essays-boxes ml-4 mt-4">
-              <div className="essays-rounded-box-not-pressed">MIT Essays</div>
-            </div>
+      <div className="essays-boxes ml-4 mt-4">
+        <div className="essays-rounded-box-not-pressed">Stanford Essays</div>
+      </div>
 
-            <div className="essays-boxes ml-4 mt-4">
-              <div className="essays-rounded-box-not-pressed">
-                Harvard Essays
-              </div>
-            </div>
-
-            <div className="essays-boxes ml-4 mt-4">
-              <div className="essays-rounded-box-not-pressed">
-                Northeastern Essays
-              </div>
-            </div>
-          </div>
-
-          <div className="mr-16 mt-4 w-full">
-            <ExtendablePanels
-              panel_one={
-                <div className="gradient-box ml-16">
-                  <TipTap editor={editor} />
-                </div>
-              }
-              panel_two={
-                <div className="m-2 grid gap-2 h-fit w-full">
-                  {comments.map((comment, i) => (
-                    <SectionComment
-                      comment={comment}
-                      editor={editor}
-                      key={i}
-                    ></SectionComment>
-                  ))}
-                  {/* {JSON.stringify(comments)} */}
-                </div>
-              }
-              unique_panel_id={"panel_one"}
-              panel_one_width={200}
-              panel_one_min_width={200}
-              panel_two_min_width={200}
-            />
-          </div>
+      <div className="essays-boxes ml-4 mt-4">
+        <div className="essays-rounded-box-not-pressed">
+          Georgia Tech Essays
         </div>
       </div>
 
-      <ThemeButtons></ThemeButtons>
-      {/* <Link href="/demo_backend">Go to demo backend</Link> */}
-    </main>
+      <div className="essays-boxes ml-4 mt-4">
+        <div className="essays-rounded-box-not-pressed">Stanford Essays</div>
+      </div>
+      <div className="essays-boxes ml-4 mt-4">
+        <div className="essays-rounded-box-not-pressed">UC Essays</div>
+      </div>
+
+      <div className="essays-boxes ml-4 mt-4">
+        <div className="essays-rounded-box-not-pressed">MIT Essays</div>
+      </div>
+
+      <div className="essays-boxes ml-4 mt-4">
+        <div className="essays-rounded-box-not-pressed">Harvard Essays</div>
+      </div>
+
+      <div className="essays-boxes ml-4 mt-4">
+        <div className="essays-rounded-box-not-pressed">
+          Northeastern Essays
+        </div>
+      </div>
+    </div>
   );
 }
