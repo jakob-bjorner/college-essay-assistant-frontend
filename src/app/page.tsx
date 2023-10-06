@@ -17,6 +17,9 @@ import type { AppProps } from "next/app";
 import SectionComment from "@/components/SectionComment";
 import Toolbar from "@/components/Toolbar";
 import { MainComment } from "@/types/types";
+import Dropdown from 'react-dropdown';
+import 'react-dropdown/style.css';
+
 // session will be passed into the pageProps: https://stackoverflow.com/questions/73668032/nextauth-type-error-property-session-does-not-exist-on-type
 
 export default function Home() {
@@ -50,6 +53,36 @@ export default function Home() {
         "Prompt: What historical moment or event do you wish you could have witnessed? (50 words max)\n\nThe Trinity test, the first detonation of the atomic bomb. For one, an opportunity to meet my role models: Oppenheimer, Feynman, Fermi, etc. But also, to witness the 4 millisecond shift to an era of humanity that could eradicate itself. “Now I am become Death, the destroyer of worlds.” Text",
     },
   ]);
+
+  const promptOptions = [
+    {
+      value: "What is your mom?",
+      label: "Prompt 1"
+    },
+    {
+      value: "What is your dad?",
+      label: "Prompt 2"
+    },
+    {
+      value: "",
+      label: "Custom"
+    }
+  ];
+
+  const defaultPrompt = promptOptions[0];
+
+  const [prompt, setPrompt] = useState(defaultPrompt.value);
+  const [promptTitle, setPromptTitle] = useState(defaultPrompt.label);
+
+  const handlePromptChange = (promptObject: any) => {
+    setPromptTitle(promptObject.promptTitle)
+    setPrompt(promptObject.value)
+  }
+
+  const handleCustomPrompt = (e: string) => {
+    setPrompt(e);
+    setPromptTitle("Custom");
+  }
 
   // const onUpdate = ({ editor }: { editor: Editor }) => {
   // const tempComments: Comment[] = [];
@@ -85,12 +118,24 @@ export default function Home() {
   //     onUpdate({ editor });
   //   }
   // }, [editor]);
+  
 
   return (
     <main>
       <div className="cledge-text">cledge.</div>
       <Toolbar editor={editor} setComments={setComments} comments={comments} />
-
+      <div style={{ display: "flex" }}>
+        <div style={{ width: "10rem" }}>
+          <Dropdown 
+            options={promptOptions} 
+            onChange={(e) => handlePromptChange(e)} 
+            value={promptTitle} 
+            placeholder={"Select a prompt"} 
+          />
+        </div>
+        <textarea onChange={(e) => handleCustomPrompt(e.target.value)} style={{ color: "black", borderWidth: "2px", width: "100%" }} className="border" value={prompt} />
+      </div>
+      
       <div className="flex mt-4">
         {/* <LogInBtn></LogInBtn> */}
         <div className="mr-16 mt-4 w-full">
