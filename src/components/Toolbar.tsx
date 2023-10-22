@@ -1,6 +1,7 @@
 import { Editor } from "@tiptap/react";
 import axios from "axios";
-import { CommentInterface, MainComment } from "@/types/types";
+import { MainComment } from "@/types/types";
+import { useState } from "react";
 import ThemeButtons from "@/components/ThemeButtons";
 
 export default function Toolbar(props: {
@@ -28,36 +29,50 @@ export default function Toolbar(props: {
     props.editor?.chain().undo().run();
   };
 
-  const setComment = () => {
-    const selection = window.getSelection();
-    if (selection === null) {
-      throw new Error("no text selected error on comment");
-    }
-    const textSelected = selection.toString();
-    const commentId = "ID:" + new Date().toISOString();
-    const commentText = "filler text for now";
-    props.editor
-      ?.chain()
-      .focus()
-      .setComment("filler text for now", commentId)
-      .run();
-    const comment: MainComment = {
-      id: commentId,
-      text: commentText,
-      author: "AI",
-      timestamp: new Date(),
-      essaySectionReference: textSelected,
-      versionOfEssay: props.editor?.getText() || "",
-    };
+  const [isLoading, setIsLoading] = useState(false);
 
-    populateCommentText(comment);
+  const setComment = async () => {
+    setIsLoading(true);
+
+    try {
+      const selection = window.getSelection();
+      if (selection === null || selection.toString().trim() === "") {
+        throw new Error("No text selected for comment.");
+      }
+
+      const textSelected = selection.toString();
+      const commentId = "ID:" + new Date().toISOString();
+      const commentText = "filler text for now";
+
+      props.editor
+        ?.chain()
+        .focus()
+        .setComment(commentText, commentId)
+        .run();
+
+      const comment: MainComment = {
+        id: commentId,
+        text: commentText,
+        author: "AI",
+        timestamp: new Date(),
+        essaySectionReference: textSelected,
+        versionOfEssay: props.editor?.getText() || "",
+      };
+
+      // Simulate an API call delay with setTimeout
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
+      setIsLoading(false);
+
+      const newComment = await populateCommentText(comment);
+      props.setComments([...props.comments, newComment]);
+    } catch (error) {
+      setIsLoading(false);
+      console.error("Error while setting a comment:", error);
+    }
   };
 
-  function sleep(ms: number) {
-    return new Promise((resolve) => setTimeout(resolve, ms));
-  }
-
-  const populateCommentText = async (comment: MainComment) => {
+  const populateCommentText = async (comment) => {
     // await sleep(100);
     // locate the selected text in the editor which is found by <span data-comment="filler text for now">
     // const searchQuery = "span[data-comment='filler text for now']";
@@ -80,37 +95,31 @@ export default function Toolbar(props: {
     //   },
     // });
 
-    const commentResponse = async () => {
-      if (selectedText && props.editor?.getText()) {
-        return await axios({
-          method: "post",
-          url: "/backend/bot/feedback",
-          data: {
-            full_essay: props.editor?.getText(),
-            section_to_review: selectedText,
-          },
-        }).then((response) => {
-          return response.data;
-        });
-      } else {
-        console.log(
-          "selected text ERROR",
-          selectedText,
-          props.editor?.getText(),
-        );
-        return "ERROR: No text selected.";
-      }
-    };
+    if (!selectedText || !props.editor?.getText()) {
+      console.error("Selected text or editor content is missing.");
+      return {
+        ...comment,
+        text: "ERROR: No text selected.",
+      };
+    }
 
-    const newComment: MainComment = {
-      ...comment,
-      text: await commentResponse(),
-    };
-    console.log(props.comments);
-    props.setComments([...props.comments, newComment]);
-    console.log(newComment);
-    return newComment;
+    try {
+      const response = await axios.post("/backend/bot/feedback", {
+        full_essay: props.editor?.getText(),
+        section_to_review: selectedText,
+      });
 
+      return {
+        ...comment,
+        text: response.data,
+      };
+    } catch (error) {
+      console.error("Error while fetching comment response:", error);
+      return {
+        ...comment,
+        text: "Error fetching comment response.",
+      };
+    }
     // const xpath = "//div[text()='filler text for now']";
     // const commentElement = document.evaluate(
     //   xpath,
@@ -125,61 +134,53 @@ export default function Toolbar(props: {
     // } else {
     //   console.log("comment element ERROR", commentElement);
     // }
+
   };
 
   return (
     <div className="flex flex-row border-2 border-box p-2 md:p-4 m-2 rounded-lg bg-box space-x-4">
-      {" "}
-      {/* Increased spacing */}
       <button
         onClick={undo}
         className="text-black rounded p-3 md:p-4 hover:bg-gray-200 text-2xl"
       >
-        {" "}
-        {/* Changed text color to black */}
         {String.fromCodePoint(0x238c)}
       </button>
       <button
         onClick={setBold}
-        className="text-black rounded p-3 md:p-4 hover:bg-gray-200 text-2xl"
+        className="text-black rounded p-3 md:p-4 hover-bg-gray-200 text-2xl"
       >
-        {" "}
-        {/* Changed text color to black */}
         <b>B</b>
       </button>
       <button
         onClick={setStrikethrough}
         className="text-black rounded p-3 md:p-4 hover-bg-gray-200 text-2xl"
       >
-        {" "}
-        {/* Changed text color to black */}
         <s>S</s>
       </button>
       <button
         onClick={setItalic}
-        className="text-black rounded p-3 md:p-4 hover:bg-gray-200 text-2xl"
+        className="text-black rounded p-3 md:p-4 hover-bg-gray-200 text-2xl"
       >
-        {" "}
-        {/* Changed text color to black */}
         <i>I</i>
       </button>
       <button
         onClick={setUnderline}
-        className="text-black rounded p-3 md:p-4 hover:bg-gray-200 text-2xl"
+        className="text-black rounded p-3 md:p-4 hover-bg-gray-200 text-2xl"
       >
-        {" "}
-        {/* Changed text color to black */}
         <span className="underline">U</span>
       </button>
       <button
         onClick={setComment}
-        className="text-black rounded p-3 md:p-4 hover:bg-gray-200 text-2xl"
+        className="text-black rounded p-3 md:p-4 hover-bg-gray-200 text-2xl"
       >
-        {" "}
-        {/* Changed text color to black */}
-        {String.fromCodePoint(0x0001f5e8)}
+        {isLoading ? (
+          // Show a loading wheel when isLoading is true
+          <div className="loader"></div>
+        ) : (
+          String.fromCodePoint(0x0001f5e8)
+        )}
       </button>
-      <div className="rounded-md p-2 md:p-3 hover:bg-gray-700">
+      <div className="rounded-md p-2 md:p-3 hover-bg-gray-700">
         <ThemeButtons />
       </div>
     </div>
