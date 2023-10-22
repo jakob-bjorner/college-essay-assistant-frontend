@@ -143,7 +143,7 @@ const SectionCommentReply = ({
           setIsLoading(false);
         }
       },
-      [editor, subComment, commentHistory],
+      [editor, subComment, commentHistory, prompt, setIsLoading],
     );
   if (subComment === null || subComment === undefined) {
     return <></>;

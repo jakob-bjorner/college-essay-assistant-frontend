@@ -112,24 +112,27 @@ export default function Home() {
     setPromptTitle("Custom");
   };
 
-  const onUpdate = ({ editor }: { editor: Editor }) => {
-    // take only the subset of comments which are still in the text editor to display to the user.
-    let commentIdsFound: string[] = [];
-    editor.state.doc.descendants((node, pos) => {
-      const { marks } = node;
-      marks.forEach((mark) => {
-        if (mark.type.name == "comment") {
-          commentIdsFound = [...commentIdsFound, mark.attrs.commentId];
-        }
+  const onUpdate = useCallback(
+    ({ editor }: { editor: Editor }) => {
+      // take only the subset of comments which are still in the text editor to display to the user.
+      let commentIdsFound: string[] = [];
+      editor.state.doc.descendants((node, pos) => {
+        const { marks } = node;
+        marks.forEach((mark) => {
+          if (mark.type.name == "comment") {
+            commentIdsFound = [...commentIdsFound, mark.attrs.commentId];
+          }
+        });
       });
-    });
-    // console.log(commentIdsFound);
-    // console.log(comments);
-    // console.log(editor.getJSON());
-    setComments(
-      comments.filter((comment) => commentIdsFound.includes(comment.id)),
-    );
-  };
+      // console.log(commentIdsFound);
+      // console.log(comments);
+      // console.log(editor.getJSON());
+      setComments(
+        comments.filter((comment) => commentIdsFound.includes(comment.id)),
+      );
+    },
+    [comments, setComments],
+  );
 
   const editor = useEditor({
     ...config,
@@ -147,7 +150,7 @@ export default function Home() {
     if (editor) {
       onUpdate({ editor });
     }
-  }, [editor]);
+  }, [editor, onUpdate]);
 
   return (
     <main>
