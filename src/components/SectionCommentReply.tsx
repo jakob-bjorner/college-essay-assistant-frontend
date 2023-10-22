@@ -14,11 +14,15 @@ const SectionCommentReply = ({
   subComment,
   editor,
   prompt,
+  isLoading,
+  setIsLoading,
 }: {
   commentHistory: MainComment;
   subComment: CommentInterface | undefined;
   editor: Editor | null;
   prompt: string;
+  isLoading: boolean;
+  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   const [messageText, setMessageText] = React.useState<string>(
     subComment?.text || "",
@@ -40,6 +44,7 @@ const SectionCommentReply = ({
   const handleUserResponse: React.KeyboardEventHandler<HTMLTextAreaElement> =
     useCallback(
       async (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
+        setIsLoading(true);
         // when enter is pressed convert the textarea to an uneditable div with the text
         if (event.key === "Enter") {
           event.preventDefault();
@@ -135,6 +140,7 @@ const SectionCommentReply = ({
             timestamp: new Date(),
           };
           setSubSubComment(subComment.subComment);
+          setIsLoading(false);
         }
       },
       [editor, subComment, commentHistory],
@@ -181,6 +187,8 @@ const SectionCommentReply = ({
           subComment={subSubComment}
           editor={editor}
           prompt={prompt}
+          isLoading={isLoading}
+          setIsLoading={setIsLoading}
         ></SectionCommentReply>
       )}
     </>

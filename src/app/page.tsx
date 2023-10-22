@@ -42,6 +42,8 @@ export default function Home() {
    */
   // const [comments, setComments] = useState<MainComment[]>([]);
   // below for testing purposes
+  const [isLoading, setIsLoading] = useState(false);
+
   const [comments, setComments] = useState<MainComment[]>([
     {
       id: "xxijiji",
@@ -155,6 +157,8 @@ export default function Home() {
         setComments={setComments}
         comments={comments}
         prompt={prompt}
+        isLoading={isLoading}
+        setIsLoading={setIsLoading}
       />
       <div style={{ display: "flex" }}>
         <div style={{ width: "10rem" }}>
@@ -190,6 +194,8 @@ export default function Home() {
                     editor={editor}
                     prompt={prompt}
                     key={i}
+                    isLoading={isLoading}
+                    setIsLoading={setIsLoading}
                   ></SectionComment>
                 ))}
               </div>

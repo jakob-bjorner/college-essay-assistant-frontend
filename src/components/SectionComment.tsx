@@ -5,10 +5,14 @@ export default function SectionComment({
   comment,
   editor,
   prompt,
+  isLoading,
+  setIsLoading,
 }: {
   comment: MainComment;
   editor: Editor | null;
   prompt: string;
+  isLoading: boolean;
+  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   return (
     <div className="dark:bg-gray-800 bg-gray-100 text-black p-2 rounded-md grid gap-2 w-full">
@@ -17,6 +21,8 @@ export default function SectionComment({
         subComment={comment}
         editor={editor}
         prompt={prompt}
+        isLoading={isLoading}
+        setIsLoading={setIsLoading}
       ></SectionCommentReply>
     </div>
   );
