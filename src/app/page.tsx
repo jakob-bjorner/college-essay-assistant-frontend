@@ -146,11 +146,11 @@ export default function Home() {
   });
 
   // console.log(editor?.getText());
-  useEffect(() => {
-    if (editor) {
-      onUpdate({ editor });
-    }
-  }, [editor, onUpdate]);
+  // useEffect(() => {
+  //   if (editor) {
+  //     onUpdate({ editor });
+  //   }
+  // }, [onUpdate]); // cant include essay dep. inf loop
 
   return (
     <main>
