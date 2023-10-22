@@ -29,9 +29,9 @@ export default function ExtendablePanels({
       m_pos = e.x;
       // ensure the drag bar is within the container
       const left_panel_new_width =
-        parseInt(getComputedStyle(left_panel, "").width) - dx;
+        parseFloat(getComputedStyle(left_panel, "").width) - dx;
       const right_panel_new_width =
-        parseInt(getComputedStyle(right_panel, "").width) + dx;
+        parseFloat(getComputedStyle(right_panel, "").width) + dx;
       if (
         left_panel_new_width < panel_one_min_width ||
         right_panel_new_width < panel_two_min_width

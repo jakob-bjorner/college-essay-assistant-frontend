@@ -13,10 +13,12 @@ const SectionCommentReply = ({
   commentHistory,
   subComment,
   editor,
+  prompt,
 }: {
   commentHistory: MainComment;
   subComment: CommentInterface | undefined;
   editor: Editor | null;
+  prompt: string;
 }) => {
   const [messageText, setMessageText] = React.useState<string>(
     subComment?.text || "",
@@ -118,6 +120,7 @@ const SectionCommentReply = ({
               full_essay: editor?.getText(),
               section_to_review: sectionToReviewString,
               comment_history: commentHistoryArray,
+              prompt: prompt,
             },
           }).then((response) => {
             return response.data;
@@ -177,6 +180,7 @@ const SectionCommentReply = ({
           commentHistory={commentHistory}
           subComment={subSubComment}
           editor={editor}
+          prompt={prompt}
         ></SectionCommentReply>
       )}
     </>

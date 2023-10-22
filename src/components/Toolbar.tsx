@@ -7,6 +7,7 @@ export default function Toolbar(props: {
   editor: Editor | null;
   setComments: React.Dispatch<React.SetStateAction<MainComment[]>>;
   comments: MainComment[];
+  prompt: string;
 }) {
   const setBold = () => {
     props.editor?.chain().focus().toggleBold().run();
@@ -58,27 +59,7 @@ export default function Toolbar(props: {
   }
 
   const populateCommentText = async (comment: MainComment) => {
-    // await sleep(100);
-    // locate the selected text in the editor which is found by <span data-comment="filler text for now">
-    // const searchQuery = "span[data-comment='filler text for now']";
-    // const commentSpanElement = document.querySelector(searchQuery);
-    // const selectedText = commentSpanElement?.textContent;
-    // console.log(commentSpanElement);
-    // console.log(selectedText);
-    // commentSpanElement?.setAttribute("data-comment", "fulfilled comment");
-    // retrieve comment from backend, for now just return dummy data
-
     const selectedText = comment.essaySectionReference;
-    // props.setComments([...props.comments, comment]);
-    // console.log(props.comments);
-
-    // props.updateCommentText(newComment.id, newComment.text);
-    // console.log({
-    //   data: {
-    //     full_essay: props.editor?.getText(),
-    //     section_to_review: selectedText,
-    //   },
-    // });
 
     const commentResponse = async () => {
       if (selectedText && props.editor?.getText()) {
@@ -88,6 +69,7 @@ export default function Toolbar(props: {
           data: {
             full_essay: props.editor?.getText(),
             section_to_review: selectedText,
+            prompt: props.prompt,
           },
         }).then((response) => {
           return response.data;
@@ -110,21 +92,6 @@ export default function Toolbar(props: {
     props.setComments([...props.comments, newComment]);
     console.log(newComment);
     return newComment;
-
-    // const xpath = "//div[text()='filler text for now']";
-    // const commentElement = document.evaluate(
-    //   xpath,
-    //   document,
-    //   null,
-    //   XPathResult.FIRST_ORDERED_NODE_TYPE,
-    //   null,
-    // ).singleNodeValue;
-    // // replace the filler text with the actual comment
-    // if (commentElement) {
-    //   commentElement!.textContent = await commentResponse();
-    // } else {
-    //   console.log("comment element ERROR", commentElement);
-    // }
   };
 
   return (
@@ -136,7 +103,6 @@ export default function Toolbar(props: {
         className="text-black rounded p-3 md:p-4 hover:bg-gray-200 text-2xl"
       >
         {" "}
-        {/* Changed text color to black */}
         {String.fromCodePoint(0x238c)}
       </button>
       <button
