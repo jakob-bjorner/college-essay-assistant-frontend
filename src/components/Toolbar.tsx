@@ -3,7 +3,6 @@ import axios from "axios";
 import { MainComment } from "@/types/types";
 import { useState } from "react";
 import ThemeButtons from "@/components/ThemeButtons";
-
 export default function Toolbar(props: {
   editor: Editor | null;
   setComments: React.Dispatch<React.SetStateAction<MainComment[]>>;
@@ -50,7 +49,6 @@ export default function Toolbar(props: {
           textSelected = props.editor?.state.doc.textBetween(from, to, " ");
         }
       }
-      console.log(textSelected);
       const commentId = "ID:" + new Date().toISOString();
       const commentText = "filler text for now";
 
@@ -65,30 +63,17 @@ export default function Toolbar(props: {
         versionOfEssay: props.editor?.getText() || "",
       };
 
-      // Simulate an API call delay with setTimeout
-      // await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      const newComment = await populateCommentText(comment);
-      props.setComments([...props.comments, newComment]);
-      props.setIsLoading(false);
-    } catch (error) {
-      props.setIsLoading(false);
-      console.error("Error while setting a comment:", error);
-    }
-  };
-
-  function sleep(ms: number) {
-    return new Promise((resolve) => setTimeout(resolve, ms));
-  }
-
-  const populateCommentText = async (comment: MainComment) => {
-    const selectedText = comment.essaySectionReference;
-    let selectedTextObj = {};
-    if (!selectedText) {
-      selectedTextObj = { section_to_review: selectedText };
-    }
-    try {
-      const response = await axios({
+      // const commentHistoryArray = [
+      //   {
+      //     role: "user",
+      //     content: `Version of Essay: \`\`\`${comment.versionOfEssay}\`\`\`\nSection to Review: \`\`\`${comment.essaySectionReference}\`\`\``,
+      //   },
+      // ];
+      let selectedTextObj = {};
+      if (!textSelected) {
+        selectedTextObj = { section_to_review: textSelected };
+      }
+      const aiResponse = await axios({
         method: "post",
         url: "/backend/bot/feedback",
         data: {
@@ -96,20 +81,19 @@ export default function Toolbar(props: {
           prompt: props.prompt,
           ...selectedTextObj,
         },
+      }).then((response) => {
+        return response.data;
       });
 
-      return {
-        ...comment,
-        text: response.data,
-      };
+      comment.text = aiResponse;
+      props.setComments([...props.comments, comment]);
+      props.setIsLoading(false);
     } catch (error) {
-      console.error("Error while fetching comment response:", error);
-      return {
-        ...comment,
-        text: "Error fetching comment response.",
-      };
+      props.setIsLoading(false);
+      console.error("Error while setting a comment:", error);
     }
   };
+
 
   return (
     <div className="flex flex-row border-2 border-box p-2 md:p-4 m-2 rounded-lg bg-box space-x-4">
@@ -149,7 +133,6 @@ export default function Toolbar(props: {
         className="text-black rounded p-3 md:p-4 hover-bg-gray-200 text-2xl"
       >
         {props.isLoading ? (
-          // Show a loading wheel when isLoading is true
           <div className="loader"></div>
         ) : (
           String.fromCodePoint(0x0001f5e8)

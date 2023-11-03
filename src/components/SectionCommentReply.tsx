@@ -7,7 +7,7 @@ import {
 } from "@/types/types";
 import { Editor } from "@tiptap/react";
 import axios from "axios";
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 
 const SectionCommentReply = ({
   commentHistory,
@@ -38,6 +38,50 @@ const SectionCommentReply = ({
       timestamp: new Date(),
     };
   }
+
+  const [showSimilarEssay, setShowSimilarEssay] = React.useState(false);
+  const [similarEssay, setSimilarEssay] = React.useState("");
+
+  const toggleSimilarEssay = () => {
+    setShowSimilarEssay(!showSimilarEssay);
+
+    if (!showSimilarEssay && similarEssay === "") {
+      loadSimilarEssay();
+    }
+  };
+
+  const loadSimilarEssay = async () => {
+    if (editor) {
+      try {
+        const similarEssayResponse = await axios({
+          method: "post",
+          url: "http://127.0.0.1:5000/v2/essay/retrieve-similar",
+          data: {
+            full_essay: editor.getText(),
+          },
+        });
+
+        if (
+          similarEssayResponse.data.profiles &&
+          similarEssayResponse.data.profiles.length > 0
+        ) {
+          const desiredDatatype = "full essay";
+          for (const profile of similarEssayResponse.data.profiles) {
+            if (profile[desiredDatatype]) {
+              const similarEssayText = JSON.parse(
+                `"${profile[desiredDatatype]}"`,
+              );
+              setSimilarEssay(similarEssayText);
+              break;
+            }
+          }
+        }
+      } catch (error) {
+        console.error("Error loading similar essays:", error);
+      }
+    }
+  };
+
   const [subSubComment, setSubSubComment] =
     React.useState<CommentInterface | null>(subComment?.subComment || null);
 
@@ -112,12 +156,10 @@ const SectionCommentReply = ({
               commentSummary.content +=
                 "\nMessage: " + "```" + userComment.text + "```";
             }
-            // console.log(commentCurr);
             commentHistoryArray.push(commentSummary);
             commentCurr = commentCurr.subComment;
           }
 
-          // make post to backend for AI response
           const aiResponse = await axios({
             method: "post",
             url: "/backend/bot/comment-reply",
@@ -130,6 +172,7 @@ const SectionCommentReply = ({
           }).then((response) => {
             return response.data;
           });
+
           // const aiResponse = "Test feedback string";
           console.log(commentHistoryArray);
 
@@ -152,8 +195,18 @@ const SectionCommentReply = ({
   return (
     <>
       {subComment?.author === "AI" ? (
-        <div className="comment bot-comment dark:bg-gray-700 dark:text-gray-400 bg-gray-200 text-black p-2 rounded-md w-full">
-          {messageText}
+        <div>
+          <div className="comment bot-comment dark:bg-gray-700 dark:text-gray-400 bg-gray-200 text-black p-2 rounded-md w-full">
+            {messageText}
+          </div>
+          <button onClick={toggleSimilarEssay}>
+            See accepted essay example
+          </button>
+          {showSimilarEssay && similarEssay !== "" && (
+            <div>
+              <pre style={{ whiteSpace: "pre-wrap" }}>{similarEssay}</pre>
+            </div>
+          )}
         </div>
       ) : (
         <div className="comment user-comment dark:bg-gray-700 dark:text-gray-400 bg-gray-200 text-black p-2 rounded-md w-full">
