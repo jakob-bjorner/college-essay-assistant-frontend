@@ -36,12 +36,21 @@ export default function Toolbar(props: {
     props.setIsLoading(true);
 
     try {
-      const selection = window.getSelection();
-      if (selection === null || selection.toString().trim() === "") {
-        throw new Error("No text selected for comment.");
-      }
+      // const selection = window.getSelection();
+      // if (selection === null || selection.toString().trim() === "") {
+      //   throw new Error("No text selected for comment.");
+      // }
 
-      const textSelected = selection.toString();
+      // const textSelected = selection.toString();
+      const selection = props.editor?.state.selection;
+      let textSelected = undefined;
+      if (selection) {
+        const { from, to, empty } = selection;
+        if (!empty) {
+          textSelected = props.editor?.state.doc.textBetween(from, to, " ");
+        }
+      }
+      console.log(textSelected);
       const commentId = "ID:" + new Date().toISOString();
       const commentText = "filler text for now";
 
@@ -74,13 +83,9 @@ export default function Toolbar(props: {
 
   const populateCommentText = async (comment: MainComment) => {
     const selectedText = comment.essaySectionReference;
-
-    if (!selectedText || !props.editor?.getText()) {
-      console.error("Selected text or editor content is missing.");
-      return {
-        ...comment,
-        text: "ERROR: No text selected.",
-      };
+    let selectedTextObj = {};
+    if (!selectedText) {
+      selectedTextObj = { section_to_review: selectedText };
     }
     try {
       const response = await axios({
@@ -88,8 +93,8 @@ export default function Toolbar(props: {
         url: "/backend/bot/feedback",
         data: {
           full_essay: props.editor?.getText(),
-          section_to_review: selectedText,
           prompt: props.prompt,
+          ...selectedTextObj,
         },
       });
 
