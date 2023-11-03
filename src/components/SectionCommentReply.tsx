@@ -52,10 +52,11 @@ const SectionCommentReply = ({
 
   const loadSimilarEssay = async () => {
     if (editor) {
+      setIsLoading(true);
       try {
         const similarEssayResponse = await axios({
           method: "post",
-          url: "http://127.0.0.1:5000/v2/essay/retrieve-similar",
+          url: "/backend/essay/retrieve-similar",
           data: {
             full_essay: editor.getText(),
           },
@@ -79,6 +80,7 @@ const SectionCommentReply = ({
       } catch (error) {
         console.error("Error loading similar essays:", error);
       }
+      setIsLoading(false);
     }
   };
 
@@ -200,6 +202,11 @@ const SectionCommentReply = ({
             {messageText}
           </div>
           <button onClick={toggleSimilarEssay}>
+            {showSimilarEssay ? (
+              <span className="text-2l">▼</span>
+            ) : (
+              <span className="text-2l">▶</span>
+            )}
             See accepted essay example
           </button>
           {showSimilarEssay && similarEssay !== "" && (

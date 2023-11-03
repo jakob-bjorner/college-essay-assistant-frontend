@@ -94,7 +94,6 @@ export default function Toolbar(props: {
     }
   };
 
-
   return (
     <div className="flex flex-row border-2 border-box p-2 md:p-4 m-2 rounded-lg bg-box space-x-4">
       <button
