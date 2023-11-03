@@ -194,7 +194,7 @@ const SectionCommentReply = ({
         <div className="comment bot-comment dark:bg-gray-700 dark:text-gray-400 bg-gray-200 text-black p-2 rounded-md w-full">
           {messageText}
         </div>
-        <button onClick={toggleSimilarEssay}>Get similar essay</button>
+        <button onClick={toggleSimilarEssay}>See accepted essay example</button>
         {showSimilarEssay && similarEssay !== "" && (
           <div>
             <pre style={{ whiteSpace: "pre-wrap" }}>{similarEssay}</pre>
