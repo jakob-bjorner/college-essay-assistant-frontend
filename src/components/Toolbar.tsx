@@ -6,7 +6,7 @@ import ThemeButtons from "@/components/ThemeButtons";
 import { updateAttributes } from "@tiptap/core/dist/packages/core/src/commands";
 export default function Toolbar(props: {
   editor: Editor | null;
-  setComments: React.Dispatch<React.SetStateAction<MainComment[]>>;
+  setComments: (comments: MainComment[]) => void;
   comments: MainComment[];
   prompt: string;
   isLoading: boolean;
