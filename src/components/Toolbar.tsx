@@ -5,7 +5,7 @@ import { useState } from "react";
 import ThemeButtons from "@/components/ThemeButtons";
 export default function Toolbar(props: {
   editor: Editor | null;
-  setComments: React.Dispatch<React.SetStateAction<MainComment[]>>;
+  setComments: (comments: MainComment[]) => void;
   comments: MainComment[];
   prompt: string;
   isLoading: boolean;

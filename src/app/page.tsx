@@ -43,7 +43,17 @@ export default function Home() {
   // const [comments, setComments] = useState<MainComment[]>([]);
   // below for testing purposes
   const [isLoading, setIsLoading] = useState(false);
-
+  const [totalComments, setTotalComments] = useState<MainComment[]>([
+    {
+      id: "xxijiji",
+      text: "This is a sample comment.",
+      author: "AI",
+      timestamp: new Date(2001, 8, 27),
+      essaySectionReference: "Text",
+      versionOfEssay:
+        "Prompt: What historical moment or event do you wish you could have witnessed? (50 words max)\n\nThe Trinity test, the first detonation of the atomic bomb. For one, an opportunity to meet my role models: Oppenheimer, Feynman, Fermi, etc. But also, to witness the 4 millisecond shift to an era of humanity that could eradicate itself. “Now I am become Death, the destroyer of worlds.” Text",
+    },
+  ]);
   const [comments, setComments] = useState<MainComment[]>([
     {
       id: "xxijiji",
@@ -55,6 +65,10 @@ export default function Home() {
         "Prompt: What historical moment or event do you wish you could have witnessed? (50 words max)\n\nThe Trinity test, the first detonation of the atomic bomb. For one, an opportunity to meet my role models: Oppenheimer, Feynman, Fermi, etc. But also, to witness the 4 millisecond shift to an era of humanity that could eradicate itself. “Now I am become Death, the destroyer of worlds.” Text",
     },
   ]);
+  const setTotalAndCurrentComments = (comments: MainComment[]) => {
+    setTotalComments(comments);
+    setComments(comments);
+  };
 
   const promptOptions = [
     {
@@ -128,10 +142,10 @@ export default function Home() {
       // console.log(comments);
       // console.log(editor.getJSON());
       setComments(
-        comments.filter((comment) => commentIdsFound.includes(comment.id)),
+        totalComments.filter((comment) => commentIdsFound.includes(comment.id)),
       );
     },
-    [comments, setComments],
+    [setComments, totalComments],
   );
 
   const editor = useEditor({
@@ -157,7 +171,7 @@ export default function Home() {
       <div className="cledge-text">cledge.</div>
       <Toolbar
         editor={editor}
-        setComments={setComments}
+        setComments={setTotalAndCurrentComments}
         comments={comments}
         prompt={prompt}
         isLoading={isLoading}
