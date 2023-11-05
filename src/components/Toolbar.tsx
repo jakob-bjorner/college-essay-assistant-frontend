@@ -3,6 +3,7 @@ import axios from "axios";
 import { MainComment } from "@/types/types";
 import { useState } from "react";
 import ThemeButtons from "@/components/ThemeButtons";
+import { updateAttributes } from "@tiptap/core/dist/packages/core/src/commands";
 export default function Toolbar(props: {
   editor: Editor | null;
   setComments: React.Dispatch<React.SetStateAction<MainComment[]>>;
@@ -47,19 +48,19 @@ export default function Toolbar(props: {
 
       props.editor?.chain().focus().setComment(commentText, commentId).run();
 
-      const comment: MainComment = {
+      const [currComment, setCurrComment] = useState<MainComment>({
         id: commentId,
         text: commentText,
         author: "AI",
         timestamp: new Date(),
         essaySectionReference: textSelected,
         versionOfEssay: props.editor?.getText() || "",
-      };
+      });
 
       const commentHistoryArray = [
         {
           role: "user",
-          content: `Version of Essay: \`\`\`${comment.versionOfEssay}\`\`\`\nSection to Review: \`\`\`${comment.essaySectionReference}\`\`\``,
+          content: `Version of Essay: \`\`\`${currComment.versionOfEssay}\`\`\`\nSection to Review: \`\`\`${currComment.essaySectionReference}\`\`\``,
         },
       ];
 
@@ -75,9 +76,20 @@ export default function Toolbar(props: {
       }).then((response) => {
         return response.data;
       });
+      const reader = aiResponse.body.getReader();
+      const decoder = new TextDecoder('utf-8');
+      let partial = '';
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) {
+          break
+        }
+        partial += decoder.decode(value)
+        console.log(partial);
+        setCurrComment({...currComment, text: aiResponse});
+      }
 
-      comment.text = aiResponse;
-      props.setComments([...props.comments, comment]);
+      props.setComments([...props.comments, currComment]);
       props.setIsLoading(false);
     } catch (error) {
       props.setIsLoading(false);
