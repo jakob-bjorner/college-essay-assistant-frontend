@@ -55,14 +55,14 @@ export default function Toolbar(props: {
 
       props.editor?.chain().focus().setComment(commentText, commentId).run();
 
-      const [currComment, setCurrComment] = useState<MainComment>({
+      const comment: MainComment = {
         id: commentId,
         text: commentText,
         author: "AI",
         timestamp: new Date(),
         essaySectionReference: textSelected,
         versionOfEssay: props.editor?.getText() || "",
-      });
+      };
 
       // const commentHistoryArray = [
       //   {
@@ -95,10 +95,10 @@ export default function Toolbar(props: {
         }
         partial += decoder.decode(value)
         console.log(partial);
-        setCurrComment({...currComment, text: aiResponse});
+        comment.text = partial;
       }
 
-      props.setComments([...props.comments, currComment]);
+      props.setComments([...props.comments, comment]);
       props.setIsLoading(false);
     } catch (error) {
       props.setIsLoading(false);
