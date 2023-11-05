@@ -1,6 +1,6 @@
 type IsMaintainingVersion = {
   versionOfEssay: string;
-  essaySectionReference: string;
+  essaySectionReference?: string;
 };
 
 type MainComment = IsMaintainingVersion &

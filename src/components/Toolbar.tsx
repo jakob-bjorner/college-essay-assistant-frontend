@@ -32,17 +32,24 @@ export default function Toolbar(props: {
     props.editor?.chain().undo().run();
   };
 
-
   const setComment = async () => {
     props.setIsLoading(true);
 
     try {
-      const selection = window.getSelection();
-      if (selection === null || selection.toString().trim() === "") {
-        throw new Error("No text selected for comment.");
-      }
+      // const selection = window.getSelection();
+      // if (selection === null || selection.toString().trim() === "") {
+      //   throw new Error("No text selected for comment.");
+      // }
 
-      const textSelected = selection.toString();
+      // const textSelected = selection.toString();
+      const selection = props.editor?.state.selection;
+      let textSelected = undefined;
+      if (selection) {
+        const { from, to, empty } = selection;
+        if (!empty) {
+          textSelected = props.editor?.state.doc.textBetween(from, to, " ");
+        }
+      }
       const commentId = "ID:" + new Date().toISOString();
       const commentText = "filler text for now";
 
@@ -57,22 +64,24 @@ export default function Toolbar(props: {
         versionOfEssay: props.editor?.getText() || "",
       });
 
-      const commentHistoryArray = [
-        {
-          role: "user",
-          content: `Version of Essay: \`\`\`${currComment.versionOfEssay}\`\`\`\nSection to Review: \`\`\`${currComment.essaySectionReference}\`\`\``,
-        },
-      ];
-
+      // const commentHistoryArray = [
+      //   {
+      //     role: "user",
+      //     content: `Version of Essay: \`\`\`${comment.versionOfEssay}\`\`\`\nSection to Review: \`\`\`${comment.essaySectionReference}\`\`\``,
+      //   },
+      // ];
+      let selectedTextObj = {};
+      if (!textSelected) {
+        selectedTextObj = { section_to_review: textSelected };
+      }
       const aiResponse = await axios({
         method: "post",
-        url: "http://127.0.0.1:5000/v2/bot/feedback",
+        url: "/backend/bot/feedback",
         data: {
           full_essay: props.editor?.getText(),
-          section_to_review: textSelected,
-          comment_history: commentHistoryArray,
           prompt: props.prompt,
-        }
+          ...selectedTextObj,
+        },
       }).then((response) => {
         return response.data;
       });
@@ -95,55 +104,54 @@ export default function Toolbar(props: {
       props.setIsLoading(false);
       console.error("Error while setting a comment:", error);
     }
-  }
-
+  };
 
   return (
-      <div className="flex flex-row border-2 border-box p-2 md:p-4 m-2 rounded-lg bg-box space-x-4">
-        <button
-            onClick={undo}
-            className="text-black rounded p-3 md:p-4 hover:bg-gray-200 text-2xl"
-        >
-          {" "}
-          {String.fromCodePoint(0x238c)}
-        </button>
-        <button
-            onClick={setBold}
-            className="text-black rounded p-3 md:p-4 hover-bg-gray-200 text-2xl"
-        >
-          <b>B</b>
-        </button>
-        <button
-            onClick={setStrikethrough}
-            className="text-black rounded p-3 md:p-4 hover-bg-gray-200 text-2xl"
-        >
-          <s>S</s>
-        </button>
-        <button
-            onClick={setItalic}
-            className="text-black rounded p-3 md:p-4 hover-bg-gray-200 text-2xl"
-        >
-          <i>I</i>
-        </button>
-        <button
-            onClick={setUnderline}
-            className="text-black rounded p-3 md:p-4 hover-bg-gray-200 text-2xl"
-        >
-          <span className="underline">U</span>
-        </button>
-        <button
-            onClick={setComment}
-            className="text-black rounded p-3 md:p-4 hover-bg-gray-200 text-2xl"
-        >
-          {props.isLoading ? (
-              <div className="loader"></div>
-          ) : (
-              String.fromCodePoint(0x0001f5e8)
-          )}
-        </button>
-        <div className="rounded-md p-2 md:p-3 hover-bg-gray-700">
-          <ThemeButtons />
-        </div>
+    <div className="flex flex-row border-2 border-box p-2 md:p-4 m-2 rounded-lg bg-box space-x-4">
+      <button
+        onClick={undo}
+        className="text-black rounded p-3 md:p-4 hover:bg-gray-200 text-2xl"
+      >
+        {" "}
+        {String.fromCodePoint(0x238c)}
+      </button>
+      <button
+        onClick={setBold}
+        className="text-black rounded p-3 md:p-4 hover-bg-gray-200 text-2xl"
+      >
+        <b>B</b>
+      </button>
+      <button
+        onClick={setStrikethrough}
+        className="text-black rounded p-3 md:p-4 hover-bg-gray-200 text-2xl"
+      >
+        <s>S</s>
+      </button>
+      <button
+        onClick={setItalic}
+        className="text-black rounded p-3 md:p-4 hover-bg-gray-200 text-2xl"
+      >
+        <i>I</i>
+      </button>
+      <button
+        onClick={setUnderline}
+        className="text-black rounded p-3 md:p-4 hover-bg-gray-200 text-2xl"
+      >
+        <span className="underline">U</span>
+      </button>
+      <button
+        onClick={setComment}
+        className="text-black rounded p-3 md:p-4 hover-bg-gray-200 text-2xl"
+      >
+        {props.isLoading ? (
+          <div className="loader"></div>
+        ) : (
+          String.fromCodePoint(0x0001f5e8)
+        )}
+      </button>
+      <div className="rounded-md p-2 md:p-3 hover-bg-gray-700">
+        <ThemeButtons />
       </div>
+    </div>
   );
 }
