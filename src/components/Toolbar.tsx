@@ -3,6 +3,7 @@ import axios from "axios";
 import { MainComment } from "@/types/types";
 import { useState } from "react";
 import ThemeButtons from "@/components/ThemeButtons";
+import { updateAttributes } from "@tiptap/core/dist/packages/core/src/commands";
 export default function Toolbar(props: {
   editor: Editor | null;
   setComments: (comments: MainComment[]) => void;
@@ -85,8 +86,19 @@ export default function Toolbar(props: {
       }).then((response) => {
         return response.data;
       });
+      const reader = aiResponse.body.getReader();
+      const decoder = new TextDecoder('utf-8');
+      let partial = '';
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) {
+          break
+        }
+        partial += decoder.decode(value)
+        console.log(partial);
+        comment.text = partial;
+      }
 
-      comment.text = aiResponse;
       props.setComments([...props.comments, comment]);
       props.setIsLoading(false);
     } catch (error) {
