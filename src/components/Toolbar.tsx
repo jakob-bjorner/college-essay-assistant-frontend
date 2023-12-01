@@ -3,6 +3,7 @@ import axios from "axios";
 import { MainComment } from "@/types/types";
 import { useState } from "react";
 import ThemeButtons from "@/components/ThemeButtons";
+import io from "socket.io-client";
 import { updateAttributes } from "@tiptap/core/dist/packages/core/src/commands";
 export default function Toolbar(props: {
   editor: Editor | null;
@@ -74,31 +75,57 @@ export default function Toolbar(props: {
       if (!textSelected) {
         selectedTextObj = { section_to_review: textSelected };
       }
-      const aiResponse = await axios({
-        method: "post",
-        url: "/backend/bot/feedback",
-        data: {
+      const socket = io("http://127.0.0.1:5000/", {
+        transports: ["websocket"],
+      });
+      socket.on("update_comments", (data) => {
+        // Update the comments array with the new data
+        console.log(data);
+        props.setComments([...props.comments, data])
+      });
+      await fetch("/backend/bot/feedback", {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        credentials: 'include',
+        body: JSON.stringify({
           full_essay: props.editor?.getText(),
           prompt: props.prompt,
           ...selectedTextObj,
-        },
-      }).then((response) => {
-        return response.data;
-      });
-      const reader = aiResponse.body.getReader();
-      const decoder = new TextDecoder('utf-8');
-      let partial = '';
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) {
-          break
-        }
-        partial += decoder.decode(value)
-        console.log(partial);
-        comment.text = partial;
-      }
+          stream: true,
+        }),
+      })
+      // console.log(aiResponse);
+      // if (!aiResponse.body) {
+      //   throw new Error("AI Response body is undefined");
+      // }
+      // const reader = aiResponse.body.getReader();
+      // console.log("READER", reader);
+      // const decoder = new TextDecoder('utf-8');
+      // let partial = '';
+      // while (true) {
+      //   console.log("BEFORE READ");
+      //   const { done, value } = await reader.read();
+      //   console.log("AFTER READ");
+      //   if (done) {
+      //     break
+      //   }
+      //   partial += decoder.decode(value);
+      //   console.log("PARTIAL", partial);
+      //   const lines = partial.split('\n');
+      //   partial = lines.pop() || "";
+      //   for (const line of lines) {
+      //       comment.text = line;
+      //       props.setComments([...props.comments, comment]);
+      //   }
+      // }
+      // if (partial) {
+      //   comment.text = partial;
+      //   props.setComments([...props.comments, comment]);
+      // }
 
-      props.setComments([...props.comments, comment]);
+      // props.setComments([...props.comments, comment]);
       props.setIsLoading(false);
     } catch (error) {
       props.setIsLoading(false);
