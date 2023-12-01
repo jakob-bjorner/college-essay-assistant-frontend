@@ -165,6 +165,7 @@ const SectionCommentReply = ({
           const aiResponse = await axios({
             method: "post",
             url: "/backend/bot/comment-reply",
+            timeout: 25000,
             data: {
               full_essay: editor?.getText(),
               section_to_review: sectionToReviewString,

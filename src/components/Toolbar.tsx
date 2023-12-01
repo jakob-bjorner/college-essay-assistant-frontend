@@ -72,7 +72,7 @@ export default function Toolbar(props: {
       //   },
       // ];
       let selectedTextObj = {};
-      if (!textSelected) {
+      if (textSelected) {
         selectedTextObj = { section_to_review: textSelected };
       }
       const socket = io("http://127.0.0.1:5000/", {
@@ -83,13 +83,11 @@ export default function Toolbar(props: {
         console.log(data);
         props.setComments([...props.comments, data])
       });
-      await fetch("/backend/bot/feedback", {
-        method: "POST",
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        credentials: 'include',
-        body: JSON.stringify({
+      const aiResponse = await axios({
+        method: "post",
+        url: "/backend/bot/feedback",
+        timeout: 25000,
+        data: {
           full_essay: props.editor?.getText(),
           prompt: props.prompt,
           ...selectedTextObj,
