@@ -92,7 +92,7 @@ export default function Toolbar(props: {
           prompt: props.prompt,
           ...selectedTextObj,
           stream: true,
-        }),
+        },
       })
       // console.log(aiResponse);
       // if (!aiResponse.body) {
