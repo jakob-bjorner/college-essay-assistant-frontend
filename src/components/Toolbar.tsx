@@ -1,7 +1,7 @@
 import { Editor } from "@tiptap/react";
 import axios from "axios";
 import { MainComment } from "@/types/types";
-import { useState } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import ThemeButtons from "@/components/ThemeButtons";
 import io from "socket.io-client";
 import { updateAttributes } from "@tiptap/core/dist/packages/core/src/commands";
@@ -33,6 +33,39 @@ export default function Toolbar(props: {
     props.editor?.chain().undo().run();
   };
 
+  const socket = useMemo(() => {
+    return io("http://127.0.0.1:5000/", {
+      transports: ["websocket"],
+    });
+  }, []);
+
+  let newCommentText = "";
+  const updateComments = useCallback((data: string) => {
+    const nComment = props.comments[props.comments.length - 1];
+    console.log(nComment);
+    if (nComment.isStreaming) {
+      nComment.text += data;
+      props.setComments([...props.comments.slice(0, props.comments.length - 1), nComment]);
+    }
+    else {
+      const comment: MainComment = {
+        id: "ID:" + new Date().toISOString(),
+        text: newCommentText + data,
+        author: "AI",
+        timestamp: new Date(),
+        isStreaming: true,
+        versionOfEssay: props.editor?.getText() || "",
+      };
+      props.setComments([...props.comments, comment]);
+
+    }
+  }, [props, newCommentText]);
+
+  useEffect(() => {
+    socket.off("update_comments");
+    socket.on("update_comments", updateComments);
+  }, [updateComments]);
+
   const setComment = async () => {
     props.setIsLoading(true);
 
@@ -56,14 +89,14 @@ export default function Toolbar(props: {
 
       props.editor?.chain().focus().setComment(commentText, commentId).run();
 
-      const comment: MainComment = {
-        id: commentId,
-        text: commentText,
-        author: "AI",
-        timestamp: new Date(),
-        essaySectionReference: textSelected,
-        versionOfEssay: props.editor?.getText() || "",
-      };
+      // const comment: MainComment = {
+      //   id: commentId,
+      //   text: "",
+      //   author: "AI",
+      //   timestamp: new Date(),
+      //   essaySectionReference: textSelected,
+      //   versionOfEssay: props.editor?.getText() || "",
+      // };
 
       // const commentHistoryArray = [
       //   {
@@ -75,14 +108,6 @@ export default function Toolbar(props: {
       if (textSelected) {
         selectedTextObj = { section_to_review: textSelected };
       }
-      const socket = io("http://127.0.0.1:5000/", {
-        transports: ["websocket"],
-      });
-      socket.on("update_comments", (data) => {
-        // Update the comments array with the new data
-        console.log(data);
-        props.setComments([...props.comments, data])
-      });
       const aiResponse = await axios({
         method: "post",
         url: "/backend/bot/feedback",
@@ -93,7 +118,11 @@ export default function Toolbar(props: {
           ...selectedTextObj,
           stream: true,
         },
-      })
+      }).then(() => {
+        props.comments[props.comments.length - 1].isStreaming = false;
+        if (textSelected)
+          props.comments[props.comments.length - 1].essaySectionReference = textSelected;
+      });
       // console.log(aiResponse);
       // if (!aiResponse.body) {
       //   throw new Error("AI Response body is undefined");
