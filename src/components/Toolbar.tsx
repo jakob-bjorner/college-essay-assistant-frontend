@@ -15,7 +15,7 @@ import { updateAttributes } from "@tiptap/core/dist/packages/core/src/commands";
 export default function Toolbar(props: {
   editor: Editor | null;
   setComments: Dispatch<SetStateAction<MainComment[][]>>;
-  comments: MainComment[];
+  comments: MainComment[][];
   prompt: string;
   isLoading: boolean;
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
@@ -48,22 +48,20 @@ export default function Toolbar(props: {
 
   const updateComments = useCallback(
     (data: string) => {
-      console.log("UPDATE COMMENT");
       props.setComments((prev) => {
-        console.log(prev[1][prev[1].length - 1].text + data);
         return [
           [
             ...prev[0].slice(0, prev[0].length - 1),
             {
               ...prev[0][prev[0].length - 1],
-              text: prev[0][prev[0].length - 1].text + data,
+              text: prev[0][prev[0].length - 1].text + data.replace("\n", ""),
             },
           ],
           [
             ...prev[1].slice(0, prev[1].length - 1),
             {
               ...prev[1][prev[1].length - 1],
-              text: prev[1][prev[1].length - 1].text + data,
+              text: prev[1][prev[1].length - 1].text + data.replace("\n", ""),
             },
           ],
         ];
@@ -100,7 +98,6 @@ export default function Toolbar(props: {
       const commentText = "temp comment text";
 
       props.editor?.chain().focus().setComment(commentText, commentId).run();
-      console.log("SET COMMENT");
       props.setComments((prev) => [
         [
           ...prev[0],

@@ -126,28 +126,28 @@ export default function Home() {
     setPromptTitle("Custom");
   };
 
-  const onUpdate = useCallback(
-    ({ editor }: { editor: Editor }) => {
-      // take only the subset of comments which are still in the text editor to display to the user.
-      let commentIdsFound: string[] = [];
-      editor.state.doc.descendants((node, pos) => {
-        const { marks } = node;
-        marks.forEach((mark) => {
-          if (mark.type.name == "comment") {
-            commentIdsFound = [...commentIdsFound, mark.attrs.commentId];
-          }
-        });
-      });
-      // console.log(commentIdsFound);
-      // console.log(comments);
-      // console.log(editor.getJSON());
-      setTotalAndCurrentComments((prev) => [
-        prev[0],
-        prev[0].filter((comment) => commentIdsFound.includes(comment.id)),
-      ]);
-    },
-    [totalAndCurrentComments, setTotalAndCurrentComments],
-  );
+  // const onUpdate = useCallback(
+  //   ({ editor }: { editor: Editor }) => {
+  //     // take only the subset of comments which are still in the text editor to display to the user.
+  //     let commentIdsFound: string[] = [];
+  //     editor.state.doc.descendants((node, pos) => {
+  //       const { marks } = node;
+  //       marks.forEach((mark) => {
+  //         if (mark.type.name == "comment") {
+  //           commentIdsFound = [...commentIdsFound, mark.attrs.commentId];
+  //         }
+  //       });
+  //     });
+  //     // console.log(commentIdsFound);
+  //     // console.log(comments);
+  //     // console.log(editor.getJSON());
+  //     setTotalAndCurrentComments((prev) => [
+  //       prev[0],
+  //       prev[0].filter((comment) => commentIdsFound.includes(comment.id)),
+  //     ]);
+  //   },
+  //   [totalAndCurrentComments, setTotalAndCurrentComments],
+  // );
 
   const editor = useEditor({
     ...config,
@@ -157,7 +157,7 @@ export default function Home() {
           "dark:bg-gray-700 dark:text-gray-400 bg-white text-black w-full rounded-md",
       },
     },
-    onUpdate,
+    // onUpdate,
   });
 
   // console.log(editor?.getText());
@@ -173,7 +173,7 @@ export default function Home() {
       <Toolbar
         editor={editor}
         setComments={setTotalAndCurrentComments}
-        comments={totalAndCurrentComments[1]}
+        comments={totalAndCurrentComments}
         prompt={prompt}
         isLoading={isLoading}
         setIsLoading={setIsLoading}
