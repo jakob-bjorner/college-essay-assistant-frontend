@@ -1,13 +1,20 @@
 import { Editor } from "@tiptap/react";
 import axios from "axios";
 import { MainComment } from "@/types/types";
-import { useState, useEffect, useMemo, useCallback } from "react";
+import {
+  useState,
+  useEffect,
+  useMemo,
+  useCallback,
+  Dispatch,
+  SetStateAction,
+} from "react";
 import ThemeButtons from "@/components/ThemeButtons";
 import io from "socket.io-client";
 import { updateAttributes } from "@tiptap/core/dist/packages/core/src/commands";
 export default function Toolbar(props: {
   editor: Editor | null;
-  setComments: (comments: MainComment[]) => void;
+  setComments: Dispatch<SetStateAction<MainComment[][]>>;
   comments: MainComment[];
   prompt: string;
   isLoading: boolean;
@@ -39,27 +46,31 @@ export default function Toolbar(props: {
     });
   }, []);
 
-  let newCommentText = "";
-  const updateComments = useCallback((data: string) => {
-    const nComment = props.comments[props.comments.length - 1];
-    console.log(nComment);
-    if (nComment.isStreaming) {
-      nComment.text += data;
-      props.setComments([...props.comments.slice(0, props.comments.length - 1), nComment]);
-    }
-    else {
-      const comment: MainComment = {
-        id: "ID:" + new Date().toISOString(),
-        text: newCommentText + data,
-        author: "AI",
-        timestamp: new Date(),
-        isStreaming: true,
-        versionOfEssay: props.editor?.getText() || "",
-      };
-      props.setComments([...props.comments, comment]);
-
-    }
-  }, [props, newCommentText]);
+  const updateComments = useCallback(
+    (data: string) => {
+      console.log("UPDATE COMMENT");
+      props.setComments((prev) => {
+        console.log(prev[1][prev[1].length - 1].text + data);
+        return [
+          [
+            ...prev[0].slice(0, prev[0].length - 1),
+            {
+              ...prev[0][prev[0].length - 1],
+              text: prev[0][prev[0].length - 1].text + data,
+            },
+          ],
+          [
+            ...prev[1].slice(0, prev[1].length - 1),
+            {
+              ...prev[1][prev[1].length - 1],
+              text: prev[1][prev[1].length - 1].text + data,
+            },
+          ],
+        ];
+      });
+    },
+    [props],
+  );
 
   useEffect(() => {
     socket.off("update_comments");
@@ -77,26 +88,43 @@ export default function Toolbar(props: {
 
       // const textSelected = selection.toString();
       const selection = props.editor?.state.selection;
-      let textSelected = undefined;
+      let textSelected = "";
       if (selection) {
         const { from, to, empty } = selection;
         if (!empty) {
-          textSelected = props.editor?.state.doc.textBetween(from, to, " ");
+          textSelected =
+            props.editor?.state.doc.textBetween(from, to, " ") || "";
         }
       }
       const commentId = "ID:" + new Date().toISOString();
-      const commentText = "filler text for now";
+      const commentText = "temp comment text";
 
       props.editor?.chain().focus().setComment(commentText, commentId).run();
-
-      // const comment: MainComment = {
-      //   id: commentId,
-      //   text: "",
-      //   author: "AI",
-      //   timestamp: new Date(),
-      //   essaySectionReference: textSelected,
-      //   versionOfEssay: props.editor?.getText() || "",
-      // };
+      console.log("SET COMMENT");
+      props.setComments((prev) => [
+        [
+          ...prev[0],
+          {
+            id: commentId,
+            text: "",
+            author: "AI",
+            timestamp: new Date(),
+            essaySectionReference: textSelected,
+            versionOfEssay: props.editor?.getText() || "",
+          },
+        ],
+        [
+          ...prev[1],
+          {
+            id: commentId,
+            text: "",
+            author: "AI",
+            timestamp: new Date(),
+            essaySectionReference: textSelected,
+            versionOfEssay: props.editor?.getText() || "",
+          },
+        ],
+      ]);
 
       // const commentHistoryArray = [
       //   {
@@ -118,11 +146,11 @@ export default function Toolbar(props: {
           ...selectedTextObj,
           stream: true,
         },
-      }).then(() => {
-        props.comments[props.comments.length - 1].isStreaming = false;
-        if (textSelected)
-          props.comments[props.comments.length - 1].essaySectionReference = textSelected;
+      }).then((res) => {
+        // props.setComments((prev) => [...prev]);
+        // console.log(props.comments[1][props.comments[1].length - 1]);
       });
+      console.log(aiResponse);
       // console.log(aiResponse);
       // if (!aiResponse.body) {
       //   throw new Error("AI Response body is undefined");
