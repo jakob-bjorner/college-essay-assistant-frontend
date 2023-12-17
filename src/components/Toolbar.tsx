@@ -66,7 +66,6 @@ export default function Toolbar(props: {
         id: newCommentText
       };
       const newCommentList = [...props.comments.slice(0, -1), newComment];
-      console.log(newCommentList);
       props.setComments(newCommentList);
     }
     // if (!!comment) {

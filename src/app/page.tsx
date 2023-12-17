@@ -206,16 +206,18 @@ export default function Home() {
             }
             panel_two={
               <div className="m-2 grid gap-2 h-fit w-full">
-                {totalAndCurrentComments[1].map((comment, i) => (
-                  <SectionComment
-                    comment={comment}
-                    editor={editor}
-                    prompt={prompt}
-                    key={i}
-                    isLoading={isLoading}
-                    setIsLoading={setIsLoading}
-                  ></SectionComment>
-                ))}
+                {
+                  (totalAndCurrentComments[1] || []).map((comment, i) => {
+                    return <SectionComment
+                      comment={comment}
+                      editor={editor}
+                      prompt={prompt}
+                      key={i}
+                      isLoading={isLoading}
+                      setIsLoading={setIsLoading}
+                    ></SectionComment>
+                  })
+                }
               </div>
             }
             unique_panel_id={"panel_one"}
