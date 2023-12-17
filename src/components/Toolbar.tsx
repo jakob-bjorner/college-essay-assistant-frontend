@@ -13,6 +13,7 @@ export default function Toolbar(props: {
   isLoading: boolean;
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
+
   const setBold = () => {
     props.editor?.chain().focus().toggleBold().run();
   };
@@ -41,25 +42,31 @@ export default function Toolbar(props: {
 
   let newCommentText = "";
   const updateComments = useCallback((data: string) => {
-    const nComment = props.comments[props.comments.length - 1];
-    console.log(nComment);
-    if (nComment.isStreaming) {
-      nComment.text += data;
-      props.setComments([...props.comments.slice(0, props.comments.length - 1), nComment]);
-    }
-    else {
-      const comment: MainComment = {
-        id: "ID:" + new Date().toISOString(),
-        text: newCommentText + data,
-        author: "AI",
-        timestamp: new Date(),
-        isStreaming: true,
-        versionOfEssay: props.editor?.getText() || "",
+    // const comment: MainComment = {
+    //   id: "ID:" + new Date().toISOString(),
+    //   text: newCommentText + data,
+    //   author: "AI",
+    //   timestamp: new Date(),
+    //   isStreaming: true,
+    //   versionOfEssay: props.editor?.getText() || "",
+    // };
+    newCommentText += data;
+    const comment = props.comments[props.comments.length - 1];
+    if (!!comment) {
+      const newComment = {
+        ...comment,
+        text: newCommentText,
+        id: newCommentText
       };
-      props.setComments([...props.comments, comment]);
-
+      const newCommentList = [...props.comments.slice(0, -1), newComment];
+      console.log(newCommentList);
+      props.setComments(newCommentList);
     }
-  }, [props, newCommentText]);
+    // if (!!comment) {
+    //   comment.text = newCommentText;
+    //   props.setComments(props.comments.concat);
+    // }
+  }, [props]);
 
   useEffect(() => {
     socket.off("update_comments");
@@ -77,7 +84,7 @@ export default function Toolbar(props: {
 
       // const textSelected = selection.toString();
       const selection = props.editor?.state.selection;
-      let textSelected = undefined;
+      let textSelected: string | undefined;
       if (selection) {
         const { from, to, empty } = selection;
         if (!empty) {
@@ -118,11 +125,7 @@ export default function Toolbar(props: {
           ...selectedTextObj,
           stream: true,
         },
-      }).then(() => {
-        props.comments[props.comments.length - 1].isStreaming = false;
-        if (textSelected)
-          props.comments[props.comments.length - 1].essaySectionReference = textSelected;
-      });
+      })
       // console.log(aiResponse);
       // if (!aiResponse.body) {
       //   throw new Error("AI Response body is undefined");
