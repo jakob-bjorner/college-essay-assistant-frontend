@@ -7,7 +7,7 @@ import {
 } from "@/types/types";
 import { Editor } from "@tiptap/react";
 import axios from "axios";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 const SectionCommentReply = ({
   commentHistory,
@@ -27,6 +27,9 @@ const SectionCommentReply = ({
   const [messageText, setMessageText] = React.useState<string>(
     subComment?.text || "",
   );
+  useEffect(() => {
+    setMessageText(subComment?.text || "");
+  }, [subComment]);
   if (
     subComment !== undefined &&
     subComment?.subComment === undefined &&

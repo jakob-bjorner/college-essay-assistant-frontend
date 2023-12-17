@@ -1,14 +1,21 @@
 import { Editor } from "@tiptap/react";
 import axios from "axios";
 import { MainComment } from "@/types/types";
-import { useState, useEffect, useMemo, useCallback } from "react";
+import {
+  useState,
+  useEffect,
+  useMemo,
+  useCallback,
+  Dispatch,
+  SetStateAction,
+} from "react";
 import ThemeButtons from "@/components/ThemeButtons";
 import io from "socket.io-client";
 import { updateAttributes } from "@tiptap/core/dist/packages/core/src/commands";
 export default function Toolbar(props: {
   editor: Editor | null;
-  setComments: (comments: MainComment[]) => void;
-  comments: MainComment[];
+  setComments: Dispatch<SetStateAction<MainComment[][]>>;
+  comments: MainComment[][];
   prompt: string;
   isLoading: boolean;
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
@@ -88,22 +95,38 @@ export default function Toolbar(props: {
       if (selection) {
         const { from, to, empty } = selection;
         if (!empty) {
-          textSelected = props.editor?.state.doc.textBetween(from, to, " ");
+          textSelected =
+            props.editor?.state.doc.textBetween(from, to, " ") || "";
         }
       }
       const commentId = "ID:" + new Date().toISOString();
-      const commentText = "filler text for now";
+      const commentText = "temp comment text";
 
       props.editor?.chain().focus().setComment(commentText, commentId).run();
-
-      // const comment: MainComment = {
-      //   id: commentId,
-      //   text: "",
-      //   author: "AI",
-      //   timestamp: new Date(),
-      //   essaySectionReference: textSelected,
-      //   versionOfEssay: props.editor?.getText() || "",
-      // };
+      props.setComments((prev) => [
+        [
+          ...prev[0],
+          {
+            id: commentId,
+            text: "",
+            author: "AI",
+            timestamp: new Date(),
+            essaySectionReference: textSelected,
+            versionOfEssay: props.editor?.getText() || "",
+          },
+        ],
+        [
+          ...prev[1],
+          {
+            id: commentId,
+            text: "",
+            author: "AI",
+            timestamp: new Date(),
+            essaySectionReference: textSelected,
+            versionOfEssay: props.editor?.getText() || "",
+          },
+        ],
+      ]);
 
       // const commentHistoryArray = [
       //   {

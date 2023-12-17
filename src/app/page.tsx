@@ -43,32 +43,32 @@ export default function Home() {
   // const [comments, setComments] = useState<MainComment[]>([]);
   // below for testing purposes
   const [isLoading, setIsLoading] = useState(false);
-  const [totalComments, setTotalComments] = useState<MainComment[]>([
-    {
-      id: "xxijiji",
-      text: "This is a sample comment.",
-      author: "AI",
-      timestamp: new Date(2001, 8, 27),
-      essaySectionReference: "Text",
-      versionOfEssay:
-        "Prompt: What historical moment or event do you wish you could have witnessed? (50 words max)\n\nThe Trinity test, the first detonation of the atomic bomb. For one, an opportunity to meet my role models: Oppenheimer, Feynman, Fermi, etc. But also, to witness the 4 millisecond shift to an era of humanity that could eradicate itself. “Now I am become Death, the destroyer of worlds.” Text",
-    },
+  const [totalAndCurrentComments, setTotalAndCurrentComments] = useState<
+    MainComment[][]
+  >([
+    [
+      {
+        id: "xxijiji",
+        text: "This is a sample comment.",
+        author: "AI",
+        timestamp: new Date(2001, 8, 27),
+        essaySectionReference: "Text",
+        versionOfEssay:
+          "Prompt: What historical moment or event do you wish you could have witnessed? (50 words max)\n\nThe Trinity test, the first detonation of the atomic bomb. For one, an opportunity to meet my role models: Oppenheimer, Feynman, Fermi, etc. But also, to witness the 4 millisecond shift to an era of humanity that could eradicate itself. “Now I am become Death, the destroyer of worlds.” Text",
+      },
+    ],
+    [
+      {
+        id: "xxijiji",
+        text: "This is a sample comment.",
+        author: "AI",
+        timestamp: new Date(2001, 8, 27),
+        essaySectionReference: "Text",
+        versionOfEssay:
+          "Prompt: What historical moment or event do you wish you could have witnessed? (50 words max)\n\nThe Trinity test, the first detonation of the atomic bomb. For one, an opportunity to meet my role models: Oppenheimer, Feynman, Fermi, etc. But also, to witness the 4 millisecond shift to an era of humanity that could eradicate itself. “Now I am become Death, the destroyer of worlds.” Text",
+      },
+    ],
   ]);
-  const [comments, setComments] = useState<MainComment[]>([
-    {
-      id: "xxijiji",
-      text: "This is a sample comment.",
-      author: "AI",
-      timestamp: new Date(2001, 8, 27),
-      essaySectionReference: "Text",
-      versionOfEssay:
-        "Prompt: What historical moment or event do you wish you could have witnessed? (50 words max)\n\nThe Trinity test, the first detonation of the atomic bomb. For one, an opportunity to meet my role models: Oppenheimer, Feynman, Fermi, etc. But also, to witness the 4 millisecond shift to an era of humanity that could eradicate itself. “Now I am become Death, the destroyer of worlds.” Text",
-    },
-  ]);
-  const setTotalAndCurrentComments = (comments: MainComment[]) => {
-    setTotalComments(comments);
-    setComments(comments);
-  };
 
   const promptOptions = [
     {
@@ -126,27 +126,28 @@ export default function Home() {
     setPromptTitle("Custom");
   };
 
-  const onUpdate = useCallback(
-    ({ editor }: { editor: Editor }) => {
-      // take only the subset of comments which are still in the text editor to display to the user.
-      let commentIdsFound: string[] = [];
-      editor.state.doc.descendants((node, pos) => {
-        const { marks } = node;
-        marks.forEach((mark) => {
-          if (mark.type.name == "comment") {
-            commentIdsFound = [...commentIdsFound, mark.attrs.commentId];
-          }
-        });
-      });
-      // console.log(commentIdsFound);
-      // console.log(comments);
-      // console.log(editor.getJSON());
-      setComments(
-        totalComments.filter((comment) => commentIdsFound.includes(comment.id)),
-      );
-    },
-    [setComments, totalComments],
-  );
+  // const onUpdate = useCallback(
+  //   ({ editor }: { editor: Editor }) => {
+  //     // take only the subset of comments which are still in the text editor to display to the user.
+  //     let commentIdsFound: string[] = [];
+  //     editor.state.doc.descendants((node, pos) => {
+  //       const { marks } = node;
+  //       marks.forEach((mark) => {
+  //         if (mark.type.name == "comment") {
+  //           commentIdsFound = [...commentIdsFound, mark.attrs.commentId];
+  //         }
+  //       });
+  //     });
+  //     // console.log(commentIdsFound);
+  //     // console.log(comments);
+  //     // console.log(editor.getJSON());
+  //     setTotalAndCurrentComments((prev) => [
+  //       prev[0],
+  //       prev[0].filter((comment) => commentIdsFound.includes(comment.id)),
+  //     ]);
+  //   },
+  //   [totalAndCurrentComments, setTotalAndCurrentComments],
+  // );
 
   const editor = useEditor({
     ...config,
@@ -156,7 +157,7 @@ export default function Home() {
           "dark:bg-gray-700 dark:text-gray-400 bg-white text-black w-full rounded-md",
       },
     },
-    onUpdate,
+    // onUpdate,
   });
 
   // console.log(editor?.getText());
@@ -172,7 +173,7 @@ export default function Home() {
       <Toolbar
         editor={editor}
         setComments={setTotalAndCurrentComments}
-        comments={comments}
+        comments={totalAndCurrentComments}
         prompt={prompt}
         isLoading={isLoading}
         setIsLoading={setIsLoading}
@@ -205,7 +206,7 @@ export default function Home() {
             }
             panel_two={
               <div className="m-2 grid gap-2 h-fit w-full">
-                {comments.map((comment, i) => (
+                {totalAndCurrentComments[1].map((comment, i) => (
                   <SectionComment
                     comment={comment}
                     editor={editor}
