@@ -41,31 +41,46 @@ export default function Toolbar(props: {
   };
 
   const socket = useMemo(() => {
-    return io(process.env.BACKEND_URL, {
-      transports: ["websocket"],
-    });
+    if (process.env.BACKEND_URL === undefined) {
+      // give an error
+      console.log("BACKEND_URL is undefined");
+      return io("", {
+        transports: ["websocket"],
+      });
+    } else {
+      return io(process.env.BACKEND_URL || "", {
+        transports: ["websocket"],
+      });
+    }
   }, []);
 
+  let newCommentText = "";
   const updateComments = useCallback(
     (data: string) => {
-      props.setComments((prev) => {
-        return [
-          [
-            ...prev[0].slice(0, prev[0].length - 1),
-            {
-              ...prev[0][prev[0].length - 1],
-              text: prev[0][prev[0].length - 1].text + data.replace("\n", ""),
-            },
-          ],
-          [
-            ...prev[1].slice(0, prev[1].length - 1),
-            {
-              ...prev[1][prev[1].length - 1],
-              text: prev[1][prev[1].length - 1].text + data.replace("\n", ""),
-            },
-          ],
-        ];
-      });
+      // const comment: MainComment = {
+      //   id: "ID:" + new Date().toISOString(),
+      //   text: newCommentText + data,
+      //   author: "AI",
+      //   timestamp: new Date(),
+      //   isStreaming: true,
+      //   versionOfEssay: props.editor?.getText() || "",
+      // };
+      newCommentText += data;
+      const comment = props.comments[props.comments.length - 1];
+      if (!!comment) {
+        const newComment = {
+          ...comment,
+          text: newCommentText,
+          id: newCommentText,
+        };
+        const newCommentList = [...props.comments.slice(0, -1), newComment];
+        console.log(newCommentList);
+        props.setComments(newCommentList);
+      }
+      // if (!!comment) {
+      //   comment.text = newCommentText;
+      //   props.setComments(props.comments.concat);
+      // }
     },
     [props],
   );
@@ -86,7 +101,7 @@ export default function Toolbar(props: {
 
       // const textSelected = selection.toString();
       const selection = props.editor?.state.selection;
-      let textSelected = "";
+      let textSelected: string | undefined;
       if (selection) {
         const { from, to, empty } = selection;
         if (!empty) {
