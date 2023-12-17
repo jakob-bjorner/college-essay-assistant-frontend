@@ -20,7 +20,6 @@ export default function Toolbar(props: {
   isLoading: boolean;
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
-
   const setBold = () => {
     props.editor?.chain().focus().toggleBold().run();
   };
@@ -42,9 +41,17 @@ export default function Toolbar(props: {
   };
 
   const socket = useMemo(() => {
-    return io("http://127.0.0.1:5000/", {
-      transports: ["websocket"],
-    });
+    if (process.env.BACKEND_URL === undefined) {
+      // give an error
+      console.log("BACKEND_URL is undefined");
+      return io("", {
+        transports: ["websocket"],
+      });
+    } else {
+      return io(process.env.BACKEND_URL || "", {
+        transports: ["websocket"],
+      });
+    }
   }, []);
 
   let newCommentText = "";
@@ -147,7 +154,8 @@ export default function Toolbar(props: {
           ...selectedTextObj,
           stream: true,
         },
-      })
+      });
+      // console.log(aiResponse);
       // console.log(aiResponse);
       // if (!aiResponse.body) {
       //   throw new Error("AI Response body is undefined");
