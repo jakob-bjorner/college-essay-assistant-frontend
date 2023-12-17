@@ -41,7 +41,7 @@ export default function Toolbar(props: {
   };
 
   const socket = useMemo(() => {
-    return io("http://127.0.0.1:5000/", {
+    return io(process.env.BACKEND_URL, {
       transports: ["websocket"],
     });
   }, []);
@@ -143,11 +143,8 @@ export default function Toolbar(props: {
           ...selectedTextObj,
           stream: true,
         },
-      }).then((res) => {
-        // props.setComments((prev) => [...prev]);
-        // console.log(props.comments[1][props.comments[1].length - 1]);
       });
-      console.log(aiResponse);
+      // console.log(aiResponse);
       // console.log(aiResponse);
       // if (!aiResponse.body) {
       //   throw new Error("AI Response body is undefined");

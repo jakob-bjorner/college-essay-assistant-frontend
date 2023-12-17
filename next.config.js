@@ -10,6 +10,11 @@ const nextConfig = () => {
   };
   return {
     rewrites,
+    reactStrictMode: true,
+    env: {
+      BACKEND_URL: process.env.BACKEND_URL,
+    },
   };
 };
+
 module.exports = nextConfig;
