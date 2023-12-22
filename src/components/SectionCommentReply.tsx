@@ -7,7 +7,8 @@ import {
 } from "@/types/types";
 import { Editor } from "@tiptap/react";
 import axios from "axios";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useState } from "react";
+import ReactMarkdown from 'react-markdown';
 
 const SectionCommentReply = ({
   commentHistory,
@@ -27,9 +28,6 @@ const SectionCommentReply = ({
   const [messageText, setMessageText] = React.useState<string>(
     subComment?.text || "",
   );
-  useEffect(() => {
-    setMessageText(subComment?.text || "");
-  }, [subComment]);
   if (
     subComment !== undefined &&
     subComment?.subComment === undefined &&
@@ -203,7 +201,7 @@ const SectionCommentReply = ({
       {subComment?.author === "AI" ? (
         <div>
           <div className="comment bot-comment dark:bg-gray-700 dark:text-gray-400 bg-gray-200 text-black p-2 rounded-md w-full">
-            {messageText}
+            <ReactMarkdown>{messageText}</ReactMarkdown>
           </div>
           <button onClick={toggleSimilarEssay}>
             {showSimilarEssay ? (
