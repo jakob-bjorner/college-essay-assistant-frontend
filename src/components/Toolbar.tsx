@@ -55,31 +55,34 @@ export default function Toolbar(props: {
   }, []);
 
   let newCommentText = "";
-  const updateComments = useCallback((data: string) => {
-    props.setComments((prev) => {
-      return [
-        [
-          ...prev[0].slice(0, prev[0].length - 1),
-          {
-            ...prev[0][prev[0].length - 1],
-            text: prev[0][prev[0].length - 1].text + data.replace("\n", ""),
-          },
-        ],
-        [
-          ...prev[1].slice(0, prev[1].length - 1),
-          {
-            ...prev[1][prev[1].length - 1],
-            text: prev[1][prev[1].length - 1].text + data.replace("\n", ""),
-          },
-        ],
-      ];
-    });
-  }, [props]);
+  const updateComments = useCallback(
+    (data: string) => {
+      props.setComments((prev) => {
+        return [
+          [
+            ...prev[0].slice(0, prev[0].length - 1),
+            {
+              ...prev[0][prev[0].length - 1],
+              text: prev[0][prev[0].length - 1].text + data.replace("\n", ""),
+            },
+          ],
+          [
+            ...prev[1].slice(0, prev[1].length - 1),
+            {
+              ...prev[1][prev[1].length - 1],
+              text: prev[1][prev[1].length - 1].text + data.replace("\n", ""),
+            },
+          ],
+        ];
+      });
+    },
+    [props],
+  );
 
   useEffect(() => {
     socket.off("update_comments");
     socket.on("update_comments", updateComments);
-  }, [updateComments]);
+  }, [updateComments, socket]);
 
   const setComment = async () => {
     props.setIsLoading(true);
