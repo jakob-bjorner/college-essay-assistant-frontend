@@ -7,7 +7,22 @@ import {
 } from "@/types/types";
 import { Editor } from "@tiptap/react";
 import axios from "axios";
-import React, { useCallback, useEffect, useState } from "react";
+import io from "socket.io-client";
+import React, { useCallback, useEffect, useState, useMemo } from "react";
+
+const socket = useMemo(() => {
+  if (process.env.BACKEND_URL === undefined) {
+    // give an error
+    console.log("BACKEND_URL is undefined");
+    return io("", {
+      transports: ["websocket"],
+    });
+  } else {
+    return io(process.env.BACKEND_URL || "", {
+      transports: ["websocket"],
+    });
+  }
+}, []);
 
 const SectionCommentReply = ({
   commentHistory,
@@ -89,6 +104,18 @@ const SectionCommentReply = ({
 
   const [subSubComment, setSubSubComment] =
     React.useState<CommentInterface | null>(subComment?.subComment || null);
+
+  useEffect(() => {
+    socket.off("update_comments");
+    socket.on("update_comments", useCallback((data: string) => {
+      setSubSubComment({
+        text: data,
+        author: "AI",
+        timestamp: new Date(),
+      })
+      setIsLoading(false);
+    }, []));
+  }, [socket]);
 
   const handleUserResponse: React.KeyboardEventHandler<HTMLTextAreaElement> =
     useCallback(
@@ -183,13 +210,13 @@ const SectionCommentReply = ({
           console.log(commentHistoryArray);
 
           // create AI subcomment for display on retrieval (TODO: indicate wait on frontend or stream the text!)
-          subComment.subComment = {
-            text: aiResponse,
-            author: "AI",
-            timestamp: new Date(),
-          };
-          setSubSubComment(subComment.subComment);
-          setIsLoading(false);
+          // subComment.subComment = {
+          //   text: aiResponse,
+          //   author: "AI",
+          //   timestamp: new Date(),
+          // };
+          // setSubSubComment(subComment.subComment);
+          // setIsLoading(false);
         }
       },
       [editor, subComment, commentHistory, prompt, setIsLoading],
