@@ -3,7 +3,7 @@
 // import { Session } from "next-auth";
 import { useEditor } from "@tiptap/react";
 import type { Editor } from "@tiptap/core";
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useMemo } from "react";
 import Link from "next/link";
 
 import TipTap from "../components/TextEditor";
@@ -20,6 +20,7 @@ import { MainComment } from "@/types/types";
 import Dropdown from "react-dropdown";
 import "react-dropdown/style.css";
 import PROMPTS from "@/prompts";
+import io from "socket.io-client";
 
 // session will be passed into the pageProps: https://stackoverflow.com/questions/73668032/nextauth-type-error-property-session-does-not-exist-on-type
 
@@ -129,6 +130,20 @@ export default function Home() {
   //   }
   // }, [onUpdate]); // cant include essay dep. inf loop
 
+  const socket = useMemo(() => {
+    if (process.env.BACKEND_URL === undefined) {
+      // give an error
+      console.log("BACKEND_URL is undefined");
+      return io("", {
+        transports: ["websocket"],
+      });
+    } else {
+      return io(process.env.BACKEND_URL || "", {
+        transports: ["websocket"],
+      });
+    }
+  }, []);
+
   return (
     <main>
       <div className="cledge-text">cledge.</div>
@@ -139,6 +154,7 @@ export default function Home() {
         prompt={prompt}
         isLoading={isLoading}
         setIsLoading={setIsLoading}
+        socket={socket}
       />
       <div style={{ display: "flex" }}>
         <div style={{ width: "10rem" }}>
@@ -177,6 +193,7 @@ export default function Home() {
                       key={i}
                       isLoading={isLoading}
                       setIsLoading={setIsLoading}
+                      socket={socket}
                     ></SectionComment>
                   );
                 })}

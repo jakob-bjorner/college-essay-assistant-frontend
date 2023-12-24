@@ -7,41 +7,22 @@ import {
 } from "@/types/types";
 import { Editor } from "@tiptap/react";
 import axios from "axios";
-import io from "socket.io-client";
+import io, { Socket } from "socket.io-client";
 import React, { useCallback, useEffect, useState, useMemo } from "react";
 import ReactMarkdown from "react-markdown";
 import rehypeRaw from "rehype-raw";
 import remarkBreaks from "remark-breaks";
 
-const socket = useMemo(() => {
-  if (process.env.BACKEND_URL === undefined) {
-    // give an error
-    console.log("BACKEND_URL is undefined");
-    return io("", {
-      transports: ["websocket"],
-    });
-  } else {
-    return io(process.env.BACKEND_URL || "", {
-      transports: ["websocket"],
-    });
-  }
-}, []);
-
-const SectionCommentReply = ({
-  commentHistory,
-  subComment,
-  editor,
-  prompt,
-  isLoading,
-  setIsLoading,
-}: {
+const SectionCommentReply = (props: {
   commentHistory: MainComment;
   subComment: CommentInterface | undefined;
   editor: Editor | null;
   prompt: string;
   isLoading: boolean;
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  socket: Socket;
 }) => {
+  const { commentHistory, subComment, editor, prompt, isLoading, setIsLoading, socket } = props;
   const [messageText, setMessageText] = React.useState<string>(
     subComment?.text || "",
   );
@@ -108,17 +89,35 @@ const SectionCommentReply = ({
   const [subSubComment, setSubSubComment] =
     React.useState<CommentInterface | null>(subComment?.subComment || null);
 
+  const updateCommentsReply = useCallback((data: string) => {
+    setSubSubComment((prev: CommentInterface | null) => {
+      if (!!prev) {
+        if (!prev.subComment) {
+          prev.subComment = {
+            text: "",
+            author: "AI",
+            timestamp: new Date()
+          }
+        } else {
+          prev.subComment = {
+            ...prev.subComment,
+            text: prev.subComment.text + data.replace("\n", "")
+          }
+        }
+        return prev;
+      } else {
+        return null;
+      }
+    })
+  }, []);
+
   useEffect(() => {
-    socket.off("update_comments");
-    socket.on("update_comments", useCallback((data: string) => {
-      setSubSubComment({
-        text: data,
-        author: "AI",
-        timestamp: new Date(),
-      })
-      setIsLoading(false);
-    }, []));
-  }, [socket]);
+    console.log("Entered useEffect");
+    if (!!socket) {
+      socket.off("update_comments_reply");
+      socket.on("update_comments_reply", updateCommentsReply);
+    }
+  }, [socket, updateCommentsReply]);
 
   const handleUserResponse: React.KeyboardEventHandler<HTMLTextAreaElement> =
     useCallback(
@@ -206,6 +205,7 @@ const SectionCommentReply = ({
               prompt: prompt,
             },
           }).then((response) => {
+            setIsLoading(false);
             return response.data;
           });
 
@@ -289,6 +289,7 @@ const SectionCommentReply = ({
           prompt={prompt}
           isLoading={isLoading}
           setIsLoading={setIsLoading}
+          socket={socket}
         ></SectionCommentReply>
       )}
     </>
