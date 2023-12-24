@@ -11,7 +11,7 @@ export default function SectionComment(props: {
   socket: Socket;
 }) {
   // console.log("INSIDE section Comment", comment);
-  const {comment, editor, prompt, isLoading, setIsLoading, socket} = props;
+  const { comment, editor, prompt, isLoading, setIsLoading, socket } = props;
   return (
     <div className="dark:bg-gray-800 bg-gray-100 text-black p-2 rounded-md grid gap-2 w-full">
       <SectionCommentReply

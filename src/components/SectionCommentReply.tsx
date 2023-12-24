@@ -24,7 +24,15 @@ const SectionCommentReply = (props: {
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
   socket: Socket;
 }) => {
-  const { commentHistory, subComment, editor, prompt, isLoading, setIsLoading, socket } = props;
+  const {
+    commentHistory,
+    subComment,
+    editor,
+    prompt,
+    isLoading,
+    setIsLoading,
+    socket,
+  } = props;
   const [messageText, setMessageText] = React.useState<string>(
     subComment?.text || "",
   );
@@ -91,35 +99,23 @@ const SectionCommentReply = (props: {
   const [subSubComment, setSubSubComment] =
     React.useState<CommentInterface | null>(subComment?.subComment || null);
 
-  const updateCommentsReply = useCallback((data: string) => {
-    setSubSubComment((prev: CommentInterface | null) => {
-      if (!!prev) {
-        if (!prev.subComment) {
-          prev.subComment = {
-            text: "",
-            author: "AI",
-            timestamp: new Date()
-          }
-        } else {
-          prev.subComment = {
-            ...prev.subComment,
-            text: prev.subComment.text + data.replace("\n", "")
-          }
-        }
-        return prev;
-      } else {
-        return null;
-      }
-    })
-  }, []);
+  // const updateCommentsReply = useCallback((data: string) => {
+  //   setSubSubComment((prev: CommentInterface | null) => {
+  //     if (!!prev) {
+  //       return { ...prev, text: prev.text + data };
+  //     } else {
+  //       return null;
+  //     }
+  //   });
+  // }, []);
 
-  useEffect(() => {
-    console.log("Entered useEffect");
-    if (!!socket) {
-      socket.off("update_comments_reply");
-      socket.on("update_comments_reply", updateCommentsReply);
-    }
-  }, [socket, updateCommentsReply]);
+  // useEffect(() => {
+  //   console.log("Entered useEffect");
+  //   if (!!socket) {
+  //     socket.off("update_comments_reply");
+  //     socket.on("update_comments_reply", updateCommentsReply);
+  //   }
+  // }, [socket, updateCommentsReply]);
 
   const handleUserResponse: React.KeyboardEventHandler<HTMLTextAreaElement> =
     useCallback(
@@ -196,6 +192,28 @@ const SectionCommentReply = (props: {
             commentCurr = commentCurr.subComment;
           }
 
+          subComment.subComment = {
+            text: "",
+            author: "AI",
+            timestamp: new Date(),
+          };
+          setSubSubComment(subComment.subComment);
+
+          const updateCommentsReply = (data: string) => {
+            setSubSubComment((prev: CommentInterface | null) => {
+              if (!!prev) {
+                return { ...prev, text: prev.text + data };
+              } else {
+                return null;
+              }
+            });
+          };
+          // console.log("Entered useEffect");
+          if (!!socket) {
+            socket.off("update_comments_reply");
+            socket.on("update_comments_reply", updateCommentsReply);
+          }
+
           const aiResponse = await axios({
             method: "post",
             url: "/backend/bot/comment-reply",
@@ -208,11 +226,13 @@ const SectionCommentReply = (props: {
             },
           }).then((response) => {
             setIsLoading(false);
+            subComment.subComment = subSubComment || subComment.subComment;
             return response.data;
           });
 
           // const aiResponse = "Test feedback string";
-          console.log(commentHistoryArray);
+          // console.log(commentHistoryArray);
+          // console.log(subComment);
 
           // create AI subcomment for display on retrieval (TODO: indicate wait on frontend or stream the text!)
           // subComment.subComment = {
@@ -224,7 +244,15 @@ const SectionCommentReply = (props: {
           // setIsLoading(false);
         }
       },
-      [editor, subComment, commentHistory, prompt, setIsLoading],
+      [
+        editor,
+        subComment,
+        commentHistory,
+        prompt,
+        setIsLoading,
+        socket,
+        subSubComment,
+      ],
     );
   if (subComment === null || subComment === undefined) {
     return <></>;

@@ -50,14 +50,14 @@ export default function Toolbar(props: {
             ...prev[0].slice(0, prev[0].length - 1),
             {
               ...prev[0][prev[0].length - 1],
-              text: prev[0][prev[0].length - 1].text + data.replace("\n", ""),
+              text: prev[0][prev[0].length - 1].text + data,
             },
           ],
           [
             ...prev[1].slice(0, prev[1].length - 1),
             {
               ...prev[1][prev[1].length - 1],
-              text: prev[1][prev[1].length - 1].text + data.replace("\n", ""),
+              text: prev[1][prev[1].length - 1].text + data,
             },
           ],
         ];
