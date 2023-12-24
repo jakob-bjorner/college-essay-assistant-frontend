@@ -7,9 +7,16 @@ module.exports = {
   ],
   theme: {
     extend: {
+      typography: {
+        DEFAULT: {
+          css: {
+            maxWidth: "100%", // for prose used in comment section reply tsx file.
+          },
+        },
+      },
       gridTemplateColumns: {
         sidebar: "300px auto",
-      }, 
+      },
       gridTemplateRows: {
         header: "64px auto",
       },
@@ -23,6 +30,6 @@ module.exports = {
       },
     },
   },
-  plugins: [],
+  plugins: [require("@tailwindcss/typography")],
   darkMode: "class",
 };
