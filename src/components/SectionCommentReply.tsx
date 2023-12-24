@@ -9,6 +9,9 @@ import { Editor } from "@tiptap/react";
 import axios from "axios";
 import io from "socket.io-client";
 import React, { useCallback, useEffect, useState, useMemo } from "react";
+import ReactMarkdown from "react-markdown";
+import rehypeRaw from "rehype-raw";
+import remarkBreaks from "remark-breaks";
 
 const socket = useMemo(() => {
   if (process.env.BACKEND_URL === undefined) {
@@ -222,7 +225,7 @@ const SectionCommentReply = ({
       [editor, subComment, commentHistory, prompt, setIsLoading],
     );
   if (subComment === null || subComment === undefined) {
-    return <></>;
+    return (<></>);
   }
 
   return (
@@ -230,7 +233,13 @@ const SectionCommentReply = ({
       {subComment?.author === "AI" ? (
         <div>
           <div className="comment bot-comment dark:bg-gray-700 dark:text-gray-400 bg-gray-200 text-black p-2 rounded-md w-full">
-            {messageText}
+            <ReactMarkdown
+              skipHtml={false}
+              rehypePlugins={[rehypeRaw]}
+              remarkPlugins={[remarkBreaks]}
+              >
+              {messageText}
+            </ReactMarkdown>
           </div>
           <button onClick={toggleSimilarEssay}>
             {showSimilarEssay ? (
