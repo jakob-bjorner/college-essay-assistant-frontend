@@ -10,7 +10,7 @@ import {
   SetStateAction,
 } from "react";
 import ThemeButtons from "@/components/ThemeButtons";
-import io from "socket.io-client";
+import io, { Socket } from "socket.io-client";
 import { updateAttributes } from "@tiptap/core/dist/packages/core/src/commands";
 export default function Toolbar(props: {
   editor: Editor | null;
@@ -19,6 +19,7 @@ export default function Toolbar(props: {
   prompt: string;
   isLoading: boolean;
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  socket: Socket;
 }) {
   const setBold = () => {
     props.editor?.chain().focus().toggleBold().run();
@@ -39,20 +40,6 @@ export default function Toolbar(props: {
   const undo = () => {
     props.editor?.chain().undo().run();
   };
-
-  const socket = useMemo(() => {
-    if (process.env.BACKEND_URL === undefined) {
-      // give an error
-      console.log("BACKEND_URL is undefined");
-      return io("", {
-        transports: ["websocket"],
-      });
-    } else {
-      return io(process.env.BACKEND_URL || "", {
-        transports: ["websocket"],
-      });
-    }
-  }, []);
 
   let newCommentText = "";
   const updateComments = useCallback(
@@ -80,9 +67,11 @@ export default function Toolbar(props: {
   );
 
   useEffect(() => {
-    socket.off("update_comments");
-    socket.on("update_comments", updateComments);
-  }, [updateComments, socket]);
+    if (!!props.socket) {
+      props.socket.off("update_comments");
+      props.socket.on("update_comments", updateComments);
+    }
+  }, [updateComments, props]);
 
   const setComment = async () => {
     props.setIsLoading(true);
