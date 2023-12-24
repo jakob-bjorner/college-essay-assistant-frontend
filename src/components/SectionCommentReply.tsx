@@ -9,6 +9,9 @@ import { Editor } from "@tiptap/react";
 import axios from "axios";
 import React, { useCallback, useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
+import rehypeRaw from "rehype-raw";
+import remarkBreaks from "remark-breaks";
+
 const SectionCommentReply = ({
   commentHistory,
   subComment,
@@ -195,7 +198,7 @@ const SectionCommentReply = ({
       [editor, subComment, commentHistory, prompt, setIsLoading],
     );
   if (subComment === null || subComment === undefined) {
-    return <></>;
+    return (<></>);
   }
 
   return (
@@ -203,7 +206,13 @@ const SectionCommentReply = ({
       {subComment?.author === "AI" ? (
         <div>
           <div className="comment bot-comment dark:bg-gray-700 dark:text-gray-400 bg-gray-200 text-black p-2 rounded-md w-full">
-            <ReactMarkdown>{messageText}</ReactMarkdown>
+            <ReactMarkdown
+              skipHtml={false}
+              rehypePlugins={[rehypeRaw]}
+              remarkPlugins={[remarkBreaks]}
+              >
+              {messageText}
+            </ReactMarkdown>
           </div>
           <button onClick={toggleSimilarEssay}>
             {showSimilarEssay ? (
